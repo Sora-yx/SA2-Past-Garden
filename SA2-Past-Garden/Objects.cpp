@@ -1,7 +1,7 @@
 #include "pch.h"
 
 ObjectListEntry PastObjectList_list[] = {
-	{ (LoadObj)2, 3, 0, 0,  RingMain, } /* "RING   " */,
+	{ (LoadObj)2, 3, 0, 0,  nullptr, } /* "RING   " */,
 	{ (LoadObj)2, 2, 0, 0,  (ObjectFuncPtr)0x6C4480, } /* "SPRING " */,
 	{ (LoadObj)2, 2, 0, 0,  (ObjectFuncPtr)0x6C4E90, } /* "SPRINGB" */,
 	{ (LoadObj)3, 3, 0, 0,  DashPanel_Main, } /* "O AXPNL" */,
@@ -55,7 +55,6 @@ void LoadLevelLayout(ObjectListHead* objlist, const char* s, const char* u)
 
 void LoadSetObject_r(ObjectListHead* list, SETEntry* setfile) {
 
-	//LoadTextureList("objtex_common", texlist_objtex_common);
 	return LoadLevelLayout(&PastObjectList, "SetPast.bin", "SET0048_2P_U.bin");
 }
 

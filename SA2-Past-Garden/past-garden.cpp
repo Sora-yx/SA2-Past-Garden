@@ -87,6 +87,8 @@ void init_PastGarden_Level()
 
     WriteCall((void*)0x54C984, PlayMusicASM);
 
+   // WriteJump((void*)0x54C9AE, (void*)0x54cbf0);
+
     Init_NewStartPos();
     Init_NewTreePos();
     init_LoadSetObj();
