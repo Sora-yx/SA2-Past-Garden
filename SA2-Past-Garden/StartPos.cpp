@@ -2,6 +2,8 @@
 
 NJS_VECTOR startPos = { 219.0f, -30.00f, 1777.0f };
 
+NJS_VECTOR startPosLeaveCave = { 0.31f, 90.0, 75.39f };
+
 //NJS_VECTOR startPos = { -63, 0, 387 };
 
 NJS_VECTOR ChaoSpawnPoint_Past[16]
@@ -37,7 +39,12 @@ void Init_NewStartPos()
     //init new start pos 
     WriteData((float**)0x52b8ce, &startPos.x);
     WriteData((float**)0x52b8d6, &startPos.y);
-    WriteData((float**)0x52b8df, &startPos.z);
+    WriteData((float**)0x52b8df, &startPos.z);   
+    
+    //start pos after leaving race cave
+    WriteData((float**)0x52b882, &startPosLeaveCave.x);
+    WriteData((float**)0x52b88A, &startPosLeaveCave.y);
+    WriteData((float**)0x52b893, &startPosLeaveCave.z);
 
     Init_NewChaoStartPos();
 }
