@@ -53,6 +53,7 @@ void LoadLandTable_r()
 {
     LandTableSA2BModels = 0;
     LoadLandTable("resource\\gd_PC\\past-garden.sa2lvl", &PastLandInfo, &PAST01_TEXINFO);
+    Load_skyboxModel();
     return;
 }
 
@@ -77,7 +78,7 @@ void init_PastGarden_Level()
 {
 	WriteCall((void*)0x54C80F, LoadLandTable_r);
 
-	WriteData<1>((int*)0x54C690, 0xC3); //prevent display to run
+	WriteJump((void*)0x54C690, PastGarden_Display); //prevent display to run
 
     //ini new rot
 //    WriteData((int**)0x52b8e9, &newRot);
