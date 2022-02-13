@@ -163,3 +163,27 @@ void LoadLandTable(const char* path, LandTableInfo** land, const TexPackInfo* te
 
 	*land = land_;
 }
+
+extern NJS_TEXLIST PAST01Obj_TEXLIST;
+
+void __cdecl ObjectGeneric_DisplayV(ObjectMaster* obj)
+{
+
+	if (obj->field_4C == nullptr)
+	{
+		PrintDebug("Past Garden Mod: Error, an object couldn't draw properly.");
+		return;
+	}
+
+	EntityData1* data = obj->Data1.Entity;
+
+	njSetTexture(&PAST01Obj_TEXLIST);
+	njPushMatrix(0);
+	njTranslateV(0, &data->Position);
+
+	njRotateY(0, (unsigned __int16)data->Rotation.y);
+
+	DrawObject((NJS_OBJECT*)obj->field_4C);
+
+	njPopMatrix(1u);
+}

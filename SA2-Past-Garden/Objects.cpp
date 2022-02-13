@@ -1,7 +1,7 @@
 #include "pch.h"
 
 static NJS_TEXNAME PAST01Obj_TEXNAME[50]{};
-static NJS_TEXLIST PAST01Obj_TEXLIST = { arrayptrandlength(PAST01Obj_TEXNAME, Uint32) };
+NJS_TEXLIST PAST01Obj_TEXLIST = { arrayptrandlength(PAST01Obj_TEXNAME, Uint32) };
 
 static ModelInfo* ChaosEmerald[7];
 static ModelInfo* MasterEmerald;
@@ -11,19 +11,26 @@ static ModelInfo* Tree;
 
 CollisionData ME_Col = { 0, (CollisionShapes)0, 0x77, 0xE0, 0x8000, {0.0, 10.0, 0.0}, 20.0, 0.0, 0.0, 0.0, 0, 0, 0 };
 CollisionData OPalmCol = { 0, (CollisionShapes)1, 0x77, 0xE0, 0x2000, {0.0, 40.0, 0.0}, 10.0, 40.0, 0.0, 0.0, 0, 0, 0 };
+CollisionData OTreeCol = { 0,  (CollisionShapes)1, 0x77, 0xE0, 0x2000, {0.0, 25.0, 0.0}, 8.0, 25.0, 0.0, 0.0, 0, 0, 0 };
 
-
-void __cdecl KnuDoorDisplay(ObjectMaster* a2)
+void __cdecl OTree_0(ObjectMaster* obj)
 {
 	EntityData1* data;
 
-	data = a2->Data1.Entity;
-	njSetTexture(&PAST01Obj_TEXLIST);
-	njPushMatrix(0);
-	njTranslateV(0, &data->Position);
-	njRotateY(0, (unsigned __int16)data->Rotation.y);
-	DrawObject(KnuDoor->getmodel());
-	njPopMatrix(1u);
+	if (ClipSetObject(obj))
+		return;
+
+	data = obj->Data1.Entity;
+
+	if (data->Action == 0)
+	{
+		obj->field_4C = Tree->getmodel();
+		obj->DisplaySub = ObjectGeneric_DisplayV;
+		InitCollision(obj, &OTreeCol, 1, 4u);
+		data->Action++;
+	}
+
+	AddToCollisionList(obj);
 }
 
 void __cdecl OKnudoor(ObjectMaster* obj)
@@ -36,28 +43,11 @@ void __cdecl OKnudoor(ObjectMaster* obj)
 	{
 		if (!data->Action)
 		{
-			obj->DisplaySub = KnuDoorDisplay;
+			obj->field_4C = KnuDoor->getmodel();
+			obj->DisplaySub = ObjectGeneric_DisplayV;
 			data->Action++;
 		}
 	}
-}
-
-
-void __cdecl OPalm_PastDisplay(ObjectMaster* a2)
-{
-	EntityData1* data;
-
-	data = a2->Data1.Entity;
-
-	njSetTexture(&PAST01Obj_TEXLIST);
-	njPushMatrix(0);
-	njTranslateV(0, &data->Position);
-
-	njRotateY(0, (unsigned __int16)data->Rotation.y);
-
-	DrawObject(Palm->getmodel());
-
-	njPopMatrix(1u);
 }
 
 void __cdecl OPalm_0(ObjectMaster* obj)
@@ -72,7 +62,8 @@ void __cdecl OPalm_0(ObjectMaster* obj)
 
 	if (data->Action == 0)
 	{
-		obj->DisplaySub = OPalm_PastDisplay;
+		obj->field_4C = Palm->getmodel();
+		obj->DisplaySub = ObjectGeneric_DisplayV;
 		InitCollision(obj, &OPalmCol, 1, 4u);
 		data->Action++;
 	}
@@ -80,17 +71,13 @@ void __cdecl OPalm_0(ObjectMaster* obj)
 	AddToCollisionList(obj);
 }
 
-
 void __cdecl MasterEmePast_Display(ObjectMaster* obj)
 {
-	EntityData1* data;
 
-	data = obj->Data1.Entity;
-
+	EntityData1* data = obj->Data1.Entity;
 	njSetTexture(&PAST01Obj_TEXLIST);
 	njPushMatrix(0);
 	njTranslate(0, data->Position.x, data->Position.y, data->Position.z);
-
 	njRotateY(0, data->Rotation.y);
 
 	DrawObject(MasterEmerald->getmodel());
@@ -99,9 +86,7 @@ void __cdecl MasterEmePast_Display(ObjectMaster* obj)
 
 void __cdecl MasterEmePast_Main(ObjectMaster* obj)
 {
-	EntityData1* data;
-
-	data = obj->Data1.Entity;
+	EntityData1* data = obj->Data1.Entity;
 
 	switch (data->Action)
 	{
@@ -119,20 +104,14 @@ void __cdecl MasterEmePast_Main(ObjectMaster* obj)
 
 void __cdecl ChaosEmePast_Display(ObjectMaster* obj)
 {
-	EntityData1* data; // esi
-	Angle v2; // eax
-	float YDist; // [esp+0h] [ebp-Ch]
+	EntityData1* data; 
 
 	data = obj->Data1.Entity;
 
 	njSetTexture(&PAST01Obj_TEXLIST);
 	njPushMatrix(0);
 	njTranslate(0, data->Position.x, data->Position.y, data->Position.z);
-	v2 = data->Rotation.y;
-	if (v2)
-	{
-		njRotateY(0, (unsigned __int16)v2);
-	}
+	njRotateY(0, data->Rotation.y);	
 	DrawObject(ChaosEmerald[data->NextAction]->getmodel());
 	njPopMatrix(1u);
 }
@@ -174,7 +153,7 @@ ObjectListEntry PastObjectList_list[] = {
 	{ (LoadObj)15, 6, 0, 0, nullptr,  } /* "O Save Point" */,
 	{ (LoadObj)2, 3, 0, 0,  (ObjectFuncPtr)CCUBE,} /* "WALL   " */,
 	{ (LoadObj)2, 3, 1, 640000,  OPalm_0,  } /* "O PALM" */,
-	{ (LoadObj)2, 3, 0, 0,  nullptr, } /* "O TREE" */,
+	{ (LoadObj)2, 3, 0, 0, OTree_0, } /* "O TREE" */,
 	{ (LoadObj)2, 3, 0, 0,  nullptr,  } /* "O SNAKE" */,
 	{ (LoadObj)2, 3, 0, 0,  nullptr, } /* "O FALL TREE" */,
 	{ (LoadObj)2, 3, 0, 0,  nullptr, } /* "O WELL" */,
@@ -224,6 +203,7 @@ void LoadSetObject_r(ObjectListHead* list, SETEntry* setfile) {
 	MasterEmerald = LoadMDL("MasterEmerald", ModelFormat_Chunk);
 	KnuDoor = LoadMDL("Knudoor", ModelFormat_Chunk);
 	Palm = LoadMDL("Palm", ModelFormat_Chunk);
+	Tree = LoadMDL("tree", ModelFormat_Chunk);
 
 	return LoadLevelLayout(&PastObjectList, "SetPast.bin", "SET0048_2P_U.bin");
 }
