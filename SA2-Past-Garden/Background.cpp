@@ -32,13 +32,23 @@ float __cdecl VectorMaxAbs(NJS_VECTOR* y)
     return result;
 }
 
+#pragma pack(push, 8)
+union ModelPointers
+{
+    NJS_MODEL* basic;
+    NJS_CNK_MODEL* chunk;
+    SA2B_Model* sa2b;
+};
+#pragma pack(pop)
+
+
 void __cdecl PastGarden_Display(ObjectMaster* a1)
 {
+
     EntityData1* data; // eax
-    int v3; // edi
 
     data = a1->Data1.Entity;
-    v3 = (unsigned __int8)data->Index;
+
     njControl3D_Backup();
     njControl3D_Add(NJD_CONTROL_3D_NO_CLIP_CHECK);
     njControl3D_Remove(NJD_CONTROL_3D_DEPTH_QUEUE);
@@ -51,8 +61,8 @@ void __cdecl PastGarden_Display(ObjectMaster* a1)
     njScale(0, 1.0, 1.0, 1.0);
     njPopMatrix(1u);
     njControl3D_Restore();
-
 }
+
 
 void Load_skyboxModel()
 {
