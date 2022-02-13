@@ -172,6 +172,7 @@
     <ClCompile Include="config.cpp" />
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="mod.cpp" />
+    <ClCompile Include="music.cpp" />
     <ClCompile Include="Objects.cpp" />
     <ClCompile Include="past-garden.cpp" />
     <ClCompile Include="pch.cpp">

@@ -68,5 +68,8 @@
     <ClCompile Include="Background.cpp">
       <Filter>Source Files\Garden</Filter>
     </ClCompile>
+    <ClCompile Include="music.cpp">
+      <Filter>Source Files\Garden</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

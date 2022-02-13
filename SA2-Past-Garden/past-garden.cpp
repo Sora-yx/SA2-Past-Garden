@@ -49,7 +49,7 @@ void Chao_OOBLimit_r()
     }
 }
 
-void LoadLandTable_r()
+void Load_PastGarden()
 {
     LandTableSA2BModels = 0;
     LoadLandTable("resource\\gd_PC\\past-garden.sa2lvl", &PastLandInfo, &PAST01_TEXINFO);
@@ -58,18 +58,11 @@ void LoadLandTable_r()
     return;
 }
 
-void PlayMusic_r(const char* song)
-{
-    PlayMusic("tical.adx");
-    return;
-}
-
 int countTexSea = 73;
 int countTexFountain = 59;
-NJS_OBJECT* IWish;
+
 void Animate_Water()
 {
-
     if (TimeTotal % 3 == 0) {
         countTexFountain++;
     }    
@@ -123,20 +116,10 @@ void __cdecl Past_Garden_Main(ObjectMaster* a1)
     Animate_Water();
 }
 
-static void __declspec(naked) PlayMusicASM()
-{
-    __asm
-    {
-        push edi
-        call PlayMusic_r
-        pop edi 
-        retn
-    }
-}
 
 void init_PastGarden_Level()
 {
-	WriteCall((void*)0x54C80F, LoadLandTable_r);
+	WriteCall((void*)0x54C80F, Load_PastGarden);
 
 	WriteJump((void*)0x54C690, PastGarden_Display); //prevent display to run
 
@@ -145,13 +128,13 @@ void init_PastGarden_Level()
 
     WriteJump(Chao_OOBLimit, Chao_OOBLimit_r); //fix OOB limit
 
-    WriteCall((void*)0x54C984, PlayMusicASM);
 
    // WriteJump((void*)0x54C9AE, (void*)0x54cbf0);
 
     Init_NewStartPos();
     Init_NewTreePos();
     init_LoadSetObj();
+    init_Music();
 
     WriteJump((void*)0x54C550, Past_Garden_Main);
 }
