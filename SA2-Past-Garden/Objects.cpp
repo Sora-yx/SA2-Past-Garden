@@ -9,7 +9,76 @@ static ModelInfo* KnuDoor;
 static ModelInfo* Palm;
 static ModelInfo* Tree;
 
-CollisionData ME_Col{ 0, (CollisionShapes)0, 0x77, 0xE0, 0x8000, {0.0, 10.0, 0.0}, 20.0, 0.0, 0.0, 0.0, 0, 0, 0 };
+CollisionData ME_Col = { 0, (CollisionShapes)0, 0x77, 0xE0, 0x8000, {0.0, 10.0, 0.0}, 20.0, 0.0, 0.0, 0.0, 0, 0, 0 };
+CollisionData OPalmCol = { 0, (CollisionShapes)1, 0x77, 0xE0, 0x2000, {0.0, 40.0, 0.0}, 10.0, 40.0, 0.0, 0.0, 0, 0, 0 };
+
+
+void __cdecl KnuDoorDisplay(ObjectMaster* a2)
+{
+	EntityData1* data;
+
+	data = a2->Data1.Entity;
+	njSetTexture(&PAST01Obj_TEXLIST);
+	njPushMatrix(0);
+	njTranslateV(0, &data->Position);
+	njRotateY(0, (unsigned __int16)data->Rotation.y);
+	DrawObject(KnuDoor->getmodel());
+	njPopMatrix(1u);
+}
+
+void __cdecl OKnudoor(ObjectMaster* obj)
+{
+	EntityData1* data; 
+
+	data = obj->Data1.Entity;
+
+	if (!ClipSetObject(obj))
+	{
+		if (!data->Action)
+		{
+			obj->DisplaySub = KnuDoorDisplay;
+			data->Action++;
+		}
+	}
+}
+
+
+void __cdecl OPalm_PastDisplay(ObjectMaster* a2)
+{
+	EntityData1* data;
+
+	data = a2->Data1.Entity;
+
+	njSetTexture(&PAST01Obj_TEXLIST);
+	njPushMatrix(0);
+	njTranslateV(0, &data->Position);
+
+	njRotateY(0, (unsigned __int16)data->Rotation.y);
+
+	DrawObject(Palm->getmodel());
+
+	njPopMatrix(1u);
+}
+
+void __cdecl OPalm_0(ObjectMaster* obj)
+{
+	EntityData1* data; 
+	double v2; 
+
+	if (ClipSetObject(obj))
+		return;
+
+	data = obj->Data1.Entity;
+
+	if (data->Action == 0)
+	{
+		obj->DisplaySub = OPalm_PastDisplay;
+		InitCollision(obj, &OPalmCol, 1, 4u);
+		data->Action++;
+	}
+
+	AddToCollisionList(obj);
+}
 
 
 void __cdecl MasterEmePast_Display(ObjectMaster* obj)
@@ -66,7 +135,6 @@ void __cdecl ChaosEmePast_Display(ObjectMaster* obj)
 	}
 	DrawObject(ChaosEmerald[data->NextAction]->getmodel());
 	njPopMatrix(1u);
-
 }
 
 void __cdecl ChaosEmePast_Main(ObjectMaster* obj)
@@ -105,7 +173,7 @@ ObjectListEntry PastObjectList_list[] = {
 	{ (LoadObj)2, 2, 1, 4000000, nullptr, } /* "O JPanel" */,
 	{ (LoadObj)15, 6, 0, 0, nullptr,  } /* "O Save Point" */,
 	{ (LoadObj)2, 3, 0, 0,  (ObjectFuncPtr)CCUBE,} /* "WALL   " */,
-	{ (LoadObj)2, 3, 1, 640000,  nullptr,  } /* "O PALM" */,
+	{ (LoadObj)2, 3, 1, 640000,  OPalm_0,  } /* "O PALM" */,
 	{ (LoadObj)2, 3, 0, 0,  nullptr, } /* "O TREE" */,
 	{ (LoadObj)2, 3, 0, 0,  nullptr,  } /* "O SNAKE" */,
 	{ (LoadObj)2, 3, 0, 0,  nullptr, } /* "O FALL TREE" */,
@@ -114,7 +182,7 @@ ObjectListEntry PastObjectList_list[] = {
 	{ (LoadObj)2, 3, 1, 1000000,  nullptr,  } /* "O KNUTREE" */,
 	{ (LoadObj)2, 3, 2, 0,  nullptr,  } /* "O PYSTAIRS" */,
 	{ (LoadObj)2, 3, 2, 0,  nullptr, } /* "O BIGSTAIRS" */,
-	{ (LoadObj)2, 3, 1, 360000,  nullptr, } /* "O KNUDOOR" */,
+	{ (LoadObj)2, 3, 1, 360000,  OKnudoor, } /* "O KNUDOOR" */,
 	{ (LoadObj)2, 3, 0, 0, nullptr, } /* "O SHIDA" */,
 	{ (LoadObj)2, 3, 0, 0, nullptr, } /* "O SOTETSU" */,
 	{ (LoadObj)2, 3, 2, 0, nullptr,  } /* "O SMOKE" */,
