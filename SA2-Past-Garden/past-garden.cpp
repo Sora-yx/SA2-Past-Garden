@@ -93,9 +93,9 @@ void Manage_SoundEffect(ObjectMaster* a1)
 	NJS_VECTOR pos;
 
 
-	pos = { 219.0f, -30.00f, 1777.0f };
+	pos = { 219.0f, -30.00f, 1077.0f };
 	data = a1->Data1.Entity;
-	pos.z = -100.0;
+	//pos.z = -100.0;
 	if (CurrentChaoArea == NextChaoArea)
 	{
 		Play3DSound_EntityAndPos((EntityData1*)a1, 1, &pos, 10);

@@ -7,7 +7,7 @@ Trampoline* sub_54AC70_t = nullptr;
 
 void Chao_Main_r(ObjectMaster* obj)
 {
-    if (CurrentChaoArea == PastGarden && !IsPlayerInsideSphere(&obj->Data1.Entity->Position, 700))
+    if (CurrentChaoArea == PastGarden && !IsPlayerInsideSphere(&obj->Data1.Entity->Position, 500))
     {
         return;
     }
