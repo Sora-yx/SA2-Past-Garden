@@ -52,13 +52,11 @@ static void __declspec(naked) sub_54AC70ASM()
         push[esp + 0Ch] // a3
         push[esp + 0Ch] // a2
         push eax // eax0
-
         call sub_54AC70_r
-
-        add esp, 4 // eax0<eax> is also used for return value
-        add esp, 4 // a2
-        add esp, 4 // a3
-        add esp, 4 // a4
+        add esp, 4 
+        add esp, 4 
+        add esp, 4 
+        add esp, 4 
         retn
     }
 }

@@ -11,10 +11,9 @@ static const TexPackInfo PAST01_TEXINFO = { "PAST01_DC", &PAST01_TEXLIST };
 float OOBLimit = -150.0f;
 
 void Init_NewTreePos() {
-	TreePos[3] = { 269, -1, 444 };
-	TreePos[4] = { -189, 0, -381 };
-	TreePos[5] = { 327, 0, 247 };
-	TreePos[6] = { -429, 3, 87.0f };
+	TreePos[0] = { 269, -1, 444 };
+	TreePos[1] = { -189, 0, -381 };
+	TreePos[2] = { 327, 0, 247 };
 }
 
 void Chao_OOBLimit_r()
@@ -251,7 +250,6 @@ void init_PastGarden_Level()
 //    WriteData((int**)0x52b8e9, &newRot);
 
 	WriteJump(Chao_OOBLimit, Chao_OOBLimit_r); //fix OOB limit
-
 
    // WriteJump((void*)0x54C9AE, (void*)0x54cbf0);
 

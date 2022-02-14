@@ -1,6 +1,6 @@
 #include "pch.h"
 
-NJS_VECTOR startPos = { 219.0f, -30.00f, 1777.0f };
+NJS_VECTOR startPos = { 24.0f, -41.00f, 1475.0f };
 
 NJS_VECTOR startPosLeaveCave = { 0.31f, 90.0, 75.39f };
 
