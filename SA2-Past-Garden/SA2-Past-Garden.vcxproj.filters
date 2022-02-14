@@ -71,5 +71,11 @@
     <ClCompile Include="music.cpp">
       <Filter>Source Files\Garden</Filter>
     </ClCompile>
+    <ClCompile Include="Water.cpp">
+      <Filter>Source Files\Garden</Filter>
+    </ClCompile>
+    <ClCompile Include="Chao-Fixes.cpp">
+      <Filter>Source Files\Garden</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

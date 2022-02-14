@@ -1,8 +1,6 @@
 #include "pch.h"
 
-
-
-void Event_StartMusic(ObjectMaster* obj)
+void MusicEvent(ObjectMaster* obj)
 {
     EntityData1* data = obj->Data1.Entity;
 
@@ -20,7 +18,6 @@ void Event_StartMusic(ObjectMaster* obj)
     case 1:
         if (IsPlayerInsideSphere(&data->Position, 100))
         {
-            StopMusic();
             PlayMusic("tical.adx");
             ResetMusic();
             data->Action++;
@@ -28,6 +25,7 @@ void Event_StartMusic(ObjectMaster* obj)
         break;
     default:
         DeleteObject_(obj);
+        break;
     }
 }
 
@@ -35,12 +33,13 @@ void Event_StartMusic(ObjectMaster* obj)
 void Stop_Music_r()
 {
     StopMusic();
-    LoadObject(2, "EventPast_MusicManager", Event_StartMusic, LoadObj_Data1);
+    LoadObject(2, "EventPast_MusicManager", MusicEvent, LoadObj_Data1);
     return;
 }
 
 void init_Music()
 {
+
     //prevent the game to switch music, we will manually start the music later
 	WriteData<5>((int*)0x54C984, 0x90);
     WriteCall((void*)0x54C989, Stop_Music_r);

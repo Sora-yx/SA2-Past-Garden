@@ -1,46 +1,24 @@
 #include "pch.h"
 
-/** PastSkyboxScale_0 = {{1, 1, 1}, {1, 1, 1}, {1, 1, 1}};
- PastSkyboxScale_1 = { { 1.4f, 1.4f, 1.4f }, { 1, 1, 1 }, { 1, 1, 1 } };
- PastSkyboxScale_2 = { { 1.45f, 1.48f, 1.45f }, { 1.45f, 1.48f, 1.45f }, { 1.45f, 1.48f, 1.45f } };*/
-
 NJS_VECTOR Skybox_Scale = { 1.4f, 1.4f, 1.4f };
 static ModelInfo* Past_BG;
 static NJS_TEXNAME PAST01BG_TEXNAME[9]{};
 static NJS_TEXLIST PAST01BG_TEXLIST = { arrayptrandlength(PAST01BG_TEXNAME, Uint32) };
 
-float __cdecl VectorMaxAbs(NJS_VECTOR* y)
-{
-    double result; // st7
-    float x; // [esp+0h] [ebp-4h]
-    float v4; // [esp+8h] [ebp+4h]
+static ModelInfo* WaterMdl[2];
 
-    x = fabs(y->x);
-    v4 = fabs(y->y);
-    result = fabs(y->z);
-    if (x <= (double)v4)
-    {
-        if (v4 > result)
-        {
-            result = v4;
-        }
-    }
-    else if (x > result)
-    {
-        result = x;
-    }
-    return result;
+void DrawWater(ObjectMaster* obj, char id)
+{
+    EntityData1* data = obj->Data1.Entity;
+    NJS_VECTOR pos = { WaterMdl[id]->getmodel()->pos[0], WaterMdl[id]->getmodel()->pos[1], WaterMdl[id]->getmodel()->pos[2] };
+
+    njSetTexture(CurrentLandTable->TextureList);
+    njPushMatrix(0);
+    njTranslateV(0, &pos);
+    DrawObject(WaterMdl[id]->getmodel());
+    njPopMatrix(1u);
+
 }
-
-#pragma pack(push, 8)
-union ModelPointers
-{
-    NJS_MODEL* basic;
-    NJS_CNK_MODEL* chunk;
-    SA2B_Model* sa2b;
-};
-#pragma pack(pop)
-
 
 void __cdecl PastGarden_Display(ObjectMaster* a1)
 {
@@ -61,11 +39,20 @@ void __cdecl PastGarden_Display(ObjectMaster* a1)
     njScale(0, 1.0, 1.0, 1.0);
     njPopMatrix(1u);
     njControl3D_Restore();
-}
 
+    for (int i = 0; i < LengthOfArray(WaterMdl); i++)
+    {
+        DrawWater(a1, i);
+    }
+}
 
 void Load_skyboxModel()
 {
     LoadTextureList("MR_SKY00_DC", &PAST01BG_TEXLIST);
     Past_BG = LoadMDL("past-skybox", ModelFormat_Chunk);
+
+    for (size_t i = 0; i < LengthOfArray(WaterMdl); i++) {
+        std::string str = "Water" + std::to_string(i);
+        WaterMdl[i] = LoadMDL(str.c_str(), ModelFormat_Chunk);
+    }
 }
