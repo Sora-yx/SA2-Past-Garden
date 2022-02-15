@@ -233,3 +233,10 @@ int IsPlayerInsideSphere(NJS_VECTOR* position, float a2)
 	}
 	return player + 1;
 }
+
+void ResetPlayerSpeed(char pid)
+{
+	MainCharObj2[pid]->Speed = { 0, 0, 0 };
+	MainCharData2[pid]->Velocity = { 0, 0, 0 };
+	return;
+}

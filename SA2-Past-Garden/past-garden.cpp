@@ -143,6 +143,7 @@ void __cdecl Past_Garden_Manager(ObjectMaster* a1)
 		if (MainCharObj1[0]) {
 
 			if (MainCharObj1[0]->Position.z == startPosLeaveCave.z) {
+				MainCharObj1[0]->Rotation.y = rot;
 				SpawnAllElements();
 				data->Action = 3;
 				return;
