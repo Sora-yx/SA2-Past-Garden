@@ -119,124 +119,65 @@ DataPointer(ObjectMaster*, dword_1313D40, 0x1313D40);
 
 void SpawnAllElements()
 {
-	unsigned int v10; // eax
-	unsigned int v11; // ecx
-	unsigned int v12; // eax
-	unsigned int v13; // eax
-	unsigned int v14; // eax
-	NJS_VECTOR position;
-	NJS_VECTOR v29;
-
-	CameraData.field_4 = 9466;
-	CameraData.field_8 = 0x4000;
-	ALCam_CameraManager();
-
-	AL_NormalCameraExecutor_Load();
 	AL_MinimalCreate();
-	ALW_Control();
 	SpawnAllChaoInGarden();
 	Load_ChaoTree();
-	sub_531E10();
-	sub_52F2A0();
-	v10 = ChaoSaveIndexThing;
-	v11 = ChaoSaveIndexThing;
-	if (ChaoSaveIndexThing != 1)
-	{
-		v11 = 0;
-	}
-	*(&ChaoGardensUnlocked + 12955 * v11) |= SA2BLobbyUnlocks_NeutralGarden;
-	if (v10 != 1)
-	{
-		v10 = 0;
-	}
-	position.x = 72.0;
-	position.y = 10.0;
-	position.z = 28.0;
-	*(&ChaoGardensUnlocked + 0x329B * v10) |= SA2BLobbyUnlocks_Kindergarten;
-	ALO_OdekakeMachine_Load(&position, 0x6000);
-	v12 = ChaoSaveIndexThing;
-	if (ChaoSaveIndexThing != 1)
-	{
-		v12 = 0;
-	}
-	if ((ChaoToysUnlocked[12955 * v12] & 8) != 0)
-	{
-		v29.x = flt_9EBA14;
-		v29.y = 5.0;
-		v29.z = -46.0;
-		position.x = 0.0;
-		position.y = 0.0;
-		position.z = 0.0;
-		ALO_Ball_Load(&v29, &position);
-	}
-	v13 = ChaoSaveIndexThing;
-	if (ChaoSaveIndexThing != 1)
-	{
-		v13 = 0;
-	}
-	if ((ChaoToysUnlocked[12955 * v13] & 1) != 0)
-	{
-		v29.x = 30.0;
-		v29.y = 1.5;
-		v29.z = -83.0;
-		ALO_TVExecutor_Load(&v29);
-	}
-	v14 = ChaoSaveIndexThing;
-	if (ChaoSaveIndexThing != 1)
-	{
-		v14 = 0;
-	}
-	if ((ChaoToysUnlocked[12955 * v14] & 4) != 0)
-	{
-		v29.x = 9.0;
-		v29.y = 0.0;
-		v29.z = -116.0;
-		ALO_BoxExecutor_Load(&v29);
-	}
-
-	//LoadWaterManager(dword_1313D40);
 }
 
 
-/**void __cdecl Past_Garden_Manager(ObjectMaster* a1)
+void __cdecl Past_Garden_Manager(ObjectMaster* a1)
 {
 	EntityData1* data = a1->Data1.Entity;
+	int rot = -0x4000;
 
 	switch (data->Action)
 	{
 	case 0:
-		data->Position = { 1, -64, 758 };
-		data->Action++;
+
+		if (++data->field_6 == 5)
+			data->Action++;
+
 		break;
 	case 1:
-		if (IsPlayerInsideSphere(&data->Position, 100)) {
+
+		if (MainCharObj1[0]) {
+
+			if (MainCharObj1[0]->Position.z == startPosLeaveCave.z) {
+				SpawnAllElements();
+				data->Action = 3;
+				return;
+			}
+			else
+			{
+				MainCharObj1[0]->Position = startPos;
+				MainCharObj1[0]->Rotation.y = rot;
+				data->Position = { 2, -12, 502 };
+			}
+
+			if (MainCharObj1[1]) {
+				MainCharObj1[1]->Position = MainCharObj1[0]->Position;
+				MainCharObj1[1]->Position.x += 7;
+				MainCharObj1[1]->Rotation.y = rot;
+			}
+
+			data->Action++;
+		}
+
+		break;
+	case 2:
+		if (IsPlayerInsideSphere(&data->Position, 100))
+		{
 			SpawnAllElements();
 			data->Action++;
 		}
 		break;
 	}
 
-	Manage_SoundEffect(a1);
-	Animate_Water();
-}*/
-
-void __cdecl Past_Garden_Manager(ObjectMaster* a1)
-{
-	EntityData1* data = a1->Data1.Entity;
-
-	switch (data->Action)
+	if (data->Action >= 2)
 	{
-	case 0:
-
-		break;
-	case 1:
-
-		//data->Action++;
-		break;
+		Manage_SoundEffect(a1);
+		Animate_Water();
 	}
-
-	Manage_SoundEffect(a1);
-	Animate_Water();
 }
 
 
@@ -260,8 +201,12 @@ void init_PastGarden_Level()
 
 	WriteJump((void*)0x54C550, Past_Garden_Manager);
 
+	//prevent the game to load a ton of chao stuff we will call them after.
+	WriteData<5>((int*)0x54C9B8, 0x90);	//MinimalCreate
+	WriteData<5>((int*)0x54C9C2, 0x90);  //spawn chao create	
+	WriteData<5>((int*)0x54C9C7, 0x90);  //Chao Tree
+
+
 	init_ChaoFixes_Hack();
 	init_WaterHack();
-
-	//WriteJump((void*)0x54C7B0, Init_PastGarden);
 }
