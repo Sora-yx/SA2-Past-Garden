@@ -13,3 +13,4 @@ const char PastGarden = 1;
 void init_WaterHack();
 void init_ChaoFixes_Hack();
 void Tikal_Event(ObjectMaster* obj);
+void CWE_FixesOnFrames();
