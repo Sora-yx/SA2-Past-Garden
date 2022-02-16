@@ -372,6 +372,8 @@ void LoadLevelLayout(ObjectListHead* objlist, const char* s, const char* u)
 	LoadSetObject(objlist, setfile);
 }
 
+void Load_Tikal();
+
 void LoadSetObject_r(ObjectListHead* list, SETEntry* setfile) {
 
 	LoadTextureList("OBJ_PAST_DC", &PAST01Obj_TEXLIST);
@@ -388,6 +390,8 @@ void LoadSetObject_r(ObjectListHead* list, SETEntry* setfile) {
 	Tree = LoadMDL("tree", ModelFormat_Chunk);
 	EggWarp = LoadMDL("EggWarp", ModelFormat_Chunk);
 	WarpEffect = LoadMDL("WarpEffect", ModelFormat_Chunk);
+
+	Load_Tikal();
 
 	return LoadLevelLayout(&PastObjectList, "SetPast.bin", "SET0048_2P_U.bin");
 }

@@ -183,6 +183,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="StartPos.cpp" />
+    <ClCompile Include="tikal.cpp" />
     <ClCompile Include="util.cpp" />
     <ClCompile Include="Water.cpp" />
   </ItemGroup>

@@ -172,6 +172,16 @@ void __cdecl Past_Garden_Manager(ObjectMaster* a1)
 			data->Action++;
 		}
 		break;
+	case 3:
+
+		if ((MainCharObj2[0]->CharID2 == Characters_Tikal) || MainCharObj2[1] && MainCharObj2[1]->CharID2 == Characters_Tikal) {
+			data->Action++;
+			break;
+		}
+
+		LoadObject(2, "Tikal", Tikal_Event, LoadObj_Data1);
+		data->Action++;
+		break;
 	}
 
 	if (data->Action >= 2)

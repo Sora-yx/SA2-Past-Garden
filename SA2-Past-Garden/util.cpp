@@ -71,7 +71,7 @@ void LoadAnimation(AnimationFile** info, const char* name, const HelperFunctions
 
 AnimationFile* LoadAnim(const char* name)
 {
-	std::string fullPath = "resource\\gd_PC\\Anim\\";
+	std::string fullPath = "resource\\gd_PC\\Anims\\";
 
 	fullPath = fullPath + name + ".saanim";
 
@@ -239,4 +239,45 @@ void ResetPlayerSpeed(char pid)
 	MainCharObj2[pid]->Speed = { 0, 0, 0 };
 	MainCharData2[pid]->Velocity = { 0, 0, 0 };
 	return;
+}
+
+void DoNextAction_r(int playerNum, char action, int unknown)
+{
+	EntityData1* v3; // eax
+
+	v3 = MainCharObj1[playerNum];
+	if (v3)
+	{
+		v3->Status |= Status_DoNextAction;
+		v3->NextAction = action;
+		MainCharObj2[playerNum]->field_28 = unknown;
+	}
+}
+
+void LookAt(NJS_VECTOR* from, NJS_VECTOR* to, Angle* outx, Angle* outy) {
+
+	if (!from || !to)
+		return;
+
+	NJS_VECTOR unit = *to;
+
+	if (outx) {
+		if (from->y == to->y) {
+			*outx = 0;
+		}
+		else {
+			Float len = 1.0f / sqrt(unit.z * unit.z + unit.x * unit.x + unit.y * unit.y);
+
+			*outx = static_cast<Angle>((acos(len * 3.3499999f) * 65536.0f * 0.1591549762031479f)
+				- (acos(-(len * unit.y)) * 65536.0f * 0.1591549762031479f));
+		}
+	}
+}
+
+void PlayerLookAt(NJS_VECTOR* from, NJS_VECTOR* to, Angle* outx, Angle* outy) {
+	LookAt(from, to, outx, outy);
+
+	if (outy) {
+		*outy = -(*outy) + 0x4000;
+	}
 }

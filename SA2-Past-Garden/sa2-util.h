@@ -85,3 +85,5 @@ static inline void LoadChaoTexlist(unsigned __int16 a1, char* a2, NJS_TEXLIST* t
 		add esp, 4
 	}
 }
+
+FunctionPointer(ObjectMaster*, DrawSubtitles, (int a1, const char* message, int displayTime, int language), 0x6B6E20);

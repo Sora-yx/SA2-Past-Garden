@@ -77,5 +77,8 @@
     <ClCompile Include="Chao-Fixes.cpp">
       <Filter>Source Files\Garden</Filter>
     </ClCompile>
+    <ClCompile Include="tikal.cpp">
+      <Filter>Source Files\Garden</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
