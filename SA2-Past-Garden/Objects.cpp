@@ -11,7 +11,6 @@ static ModelInfo* MasterEmerald;
 static ModelInfo* KnuDoor;
 static ModelInfo* Palm;
 static ModelInfo* Tree;
-
 static ModelInfo* EggWarp;
 static ModelInfo* WarpEffect;
 
@@ -25,6 +24,26 @@ CollisionData EggWarpCol[] = {
 	{ 0, (CollisionShapes)1, 0x77, 0, 0, {0}, 8.5, 4.5, 0.0, 0.0, 0, 0, 0 },
 	{ 0, (CollisionShapes)0, 0x70, 0, 0x2400, {0.0, 4.8000002, 0.0}, 3.7, 0.0, 0.0, 0.0, 0, 0, 0},
 };
+
+
+void FreeObjectsGarden()
+{
+	for (uint8_t i = 0; i < LengthOfArray(ChaosEmerald); i++) {
+		FreeMDL(ChaosEmerald[i]);
+	}
+
+	FreeMDL(MasterEmerald);
+	FreeMDL(KnuDoor);
+	FreeMDL(Palm);
+	FreeMDL(Tree);
+	FreeMDL(EggWarp);
+	FreeMDL(WarpEffect);
+
+	njReleaseTexture(&PAST01Obj_TEXLIST);
+	njReleaseTexture(&WarpObj_TEXLIST);
+
+	return;
+}
 
 void WarpEffect_Display(ObjectMaster* obj)
 {
@@ -372,7 +391,7 @@ void LoadLevelLayout(ObjectListHead* objlist, const char* s, const char* u)
 	LoadSetObject(objlist, setfile);
 }
 
-void Load_Tikal();
+void Load_TikalAndChao();
 
 void LoadSetObject_r(ObjectListHead* list, SETEntry* setfile) {
 
@@ -391,7 +410,7 @@ void LoadSetObject_r(ObjectListHead* list, SETEntry* setfile) {
 	EggWarp = LoadMDL("EggWarp", ModelFormat_Chunk);
 	WarpEffect = LoadMDL("WarpEffect", ModelFormat_Chunk);
 
-	Load_Tikal();
+	Load_TikalAndChao();
 
 	return LoadLevelLayout(&PastObjectList, "SetPast.bin", "SET0048_2P_U.bin");
 }

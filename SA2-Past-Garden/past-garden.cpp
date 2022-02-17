@@ -10,12 +10,34 @@ static const TexPackInfo PAST01_TEXINFO = { "PAST01_DC", &PAST01_TEXLIST };
 
 float OOBLimit = -150.0f;
 
+Trampoline* ChaoGardenNeutral_Delete_t = nullptr;
+
 void Init_NewTreePos() {
 	TreePos[0] = { 269, -1, 444 };
 	TreePos[1] = { -189, 0, -381 };
 	TreePos[2] = { 327, 0, 247 };
 }
 
+
+void Delete_PastGarden(ObjectMaster* obj) {
+
+
+	((decltype(Delete_PastGarden)*)ChaoGardenNeutral_Delete_t->Target())(obj);
+
+
+	PrintDebug("Delete Past Garden!\n");
+
+	if (PastLandInfo) {
+		delete(PastLandInfo);
+		PastLandInfo = nullptr;
+	}
+
+	TikalChao_Delete();
+	FreeObjectsGarden();
+
+	njReleaseTexture(&PAST01_TEXLIST);
+	return;
+}
 void Chao_OOBLimit_r()
 {
 	Float* posY; // ecx
@@ -197,13 +219,8 @@ void init_PastGarden_Level()
 	WriteCall((void*)0x54C80F, Load_PastGarden);
 
 	WriteJump((void*)0x54C690, PastGarden_Display); //prevent display to run
-
-	//ini new rot
-//    WriteData((int**)0x52b8e9, &newRot);
-
 	WriteJump(Chao_OOBLimit, Chao_OOBLimit_r); //fix OOB limit
 
-   // WriteJump((void*)0x54C9AE, (void*)0x54cbf0);
 
 	Init_NewStartPos();
 	Init_NewTreePos();
@@ -220,4 +237,6 @@ void init_PastGarden_Level()
 
 	init_ChaoFixes_Hack();
 	init_WaterHack();
+
+	ChaoGardenNeutral_Delete_t = new Trampoline((int)0x54CC10, (int)0x54CC15, Delete_PastGarden);
 }

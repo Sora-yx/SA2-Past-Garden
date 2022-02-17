@@ -7,29 +7,42 @@ AnimationFile* TikalMoveMotion = nullptr;
 NJS_TEXNAME Tikal_texname[18];
 NJS_TEXLIST Tikal_texlist = { arrayptrandlengthT(Tikal_texname, Uint32) };
 
-CollisionData TikalCol = { 0, (CollisionShapes)0, 0x77, 0xE0, 0x8000, {0.0, 10.0, 0.0}, 7.0, 0.0, 0.0, 0.0, 0, 0, 0 };
+static ModelInfo* ChaoMDL = nullptr;
+AnimationFile* ChaoStandMotion = nullptr;
+AnimationFile* ChaoSingMotion = nullptr;
+NJS_TEXNAME ChaoEV_texname[11];
+NJS_TEXLIST ChaoEV_texlist = { arrayptrandlengthT(ChaoEV_texname, Uint32) };
 
-const int timerCameo = 300;
-const int timerWalk = 1800;
+NJS_VECTOR ChaoSpot[4] = { { -119, 0.9f, 347 }, { -123, 0.9f, 368 }, {-99, 0.9f , 370}, {-99, 0.9f, 352}, };
 
-NJS_VECTOR TikalSpot[3] = { { -11, 95, 50 }, {-110, 5.0, 367}, { -16, 12, 253} };
+CollisionData TikalCol = { 0, (CollisionShapes)0, 0x77, 0xE0, 0x8000, {0.0}, 4.0, 0.0, 0.0, 0.0, 0, 0, 0 };
 
+const int timerCameo = 120;
+const int timerWalk = 600;
+const float destTikalWalkChao = -250.0f;
+bool tikalLeaving = false;
+
+//0 = autel, 1 = ground with Chao, 2 = stair
+NJS_VECTOR TikalSpot[3] = { { -11, 95, 50 }, {-88, 5.0, 360}, { -16, 12, 253} };
+
+CollisionData ChaoEVCol = { 0, (CollisionShapes)0, 0x77, 0xE0, 0x8000, {0.0, 1.0, 0.0}, 2.0, 0.0, 0.0, 0.0, 0, 0, 0 };
 
 enum TikalState {
 	init,
 	setTikal,
 	standing,
 	walking,
-	transition
+	transition,
+	ending
 };
 
 enum tikalPos {
 	masterEmeraldPos,
+	gardenPos,
 	standingStairPos,
-	gardenPos
 };
 
-const char* TikalDialogue[6] = { 
+const char* TikalDialogue[6] = {
 	{ "\a Hello there, friend.\n How are you?"},
 	{ "\a My heart has always been in the\n Master Emerald, along with Chaos."},
 	{ "\a Forgive me, but I don't think\n we've ever met before...", },
@@ -60,16 +73,91 @@ const char* getTikalDialogue(int index)
 	case Characters_Eggman:
 		return TikalDialogue[4];
 	default:
-		return TikalDialogue[rand() %2 + 2];
+		return TikalDialogue[rand() % 2 + 2];
 	case Characters_Chaos:
 		return TikalDialogue[5];
 	}
 }
 
-void Tikal_Delete(ObjectMaster* obj) {
+
+void EV_Chao_Display(ObjectMaster* obj)
+{
+	EntityData1* data = obj->Data1.Entity;
+	njControl3D_Backup();
+	njControl3D_Add(NJD_CONTROL_3D_CONSTANT_MATERIAL);
+	SetMaterial(1.0, 1.0, 1.0, 1.0);
+	njSetTexture(&ChaoEV_texlist);
+	njPushMatrix(0);
+	njTranslateV(0, &data->Position);
+	njRotateY(0, data->Rotation.y);
+
+	if (!data->Index)
+		DrawMotionAndObject(ChaoStandMotion->getmotion(), ChaoMDL->getmodel(), FrameCountIngame % ChaoStandMotion->getmotion()->nbFrame);
+	else
+		DrawMotionAndObject(ChaoSingMotion->getmotion(), ChaoMDL->getmodel(), FrameCountIngame % ChaoSingMotion->getmotion()->nbFrame);
+
+	njPopMatrix(1u);
+	ResetMaterial();
+	njControl3D_Restore();
+}
+
+void EV_Chao(ObjectMaster* obj)
+{
+	EntityData1* data = obj->Data1.Entity;
+
+	switch (data->Action)
+	{
+	case 0:
+		InitCollision(obj, &ChaoEVCol, 1, 4u);
+		obj->DisplaySub = EV_Chao_Display;
+		data->Rotation.y = 0x8000;
+		data->Position = ChaoSpot[data->field_2];
+		data->Action++;
+		break;
+	case 1:
+		if (tikalLeaving)
+		{
+			data->Action++;
+		}
+		break;
+	case 2:
+		DeleteObject_(obj);
+		return;
+	}
+
+	if (data->Action == 1)
+		AddToCollisionList(obj);
+}
+
+void Load_ChaoEvent()
+{
+	for (uint8_t i = 0; i < LengthOfArray(ChaoSpot); i++)
+	{
+		ObjectMaster* chao = LoadObject(2, "Chao_Event", EV_Chao, LoadObj_Data1);
+
+		if (chao)
+		{
+			EntityData1* data = chao->Data1.Entity;
+			data->field_2 = i;
+			if (i < 2)
+				data->Index = 0;
+			else
+				data->Index = 1;
+		}
+	}
+}
+
+
+void TikalChao_Delete() {
 	FreeMDL(TikalMDL);
 	FreeAnim(TikalStandMotion);
 	FreeAnim(TikalMoveMotion);
+	FreeMDL(ChaoMDL);
+	FreeAnim(ChaoStandMotion);
+	FreeAnim(ChaoSingMotion);
+	njReleaseTexture(&ChaoEV_texlist);
+	njReleaseTexture(&Tikal_texlist);
+	tikalLeaving = false;
 }
 
 void Tikal_CameoDisplay(ObjectMaster* obj)
@@ -80,9 +168,9 @@ void Tikal_CameoDisplay(ObjectMaster* obj)
 	njPushMatrix(0);
 	njTranslateV(0, &data->Position);
 
-	njRotateY(0, 0x8000 - data->Rotation.y);
+	njRotateY(0, data->Rotation.y);
 
-	if (data->Action == standing || data->Action == transition)
+	if (data->Action == standing || data->Action == transition || data->Action == ending)
 		DrawMotionAndObject(TikalStandMotion->getmotion(), TikalMDL->getmodel(), FrameCountIngame % TikalStandMotion->getmotion()->nbFrame);
 
 	if (data->Action == walking)
@@ -90,6 +178,7 @@ void Tikal_CameoDisplay(ObjectMaster* obj)
 
 	njPopMatrix(1u);
 }
+
 
 void Tikal_Event(ObjectMaster* obj)
 {
@@ -105,6 +194,7 @@ void Tikal_Event(ObjectMaster* obj)
 
 			if (rng)
 			{
+				tikalLeaving = false;
 				data->Action++;
 			}
 			else {
@@ -116,7 +206,12 @@ void Tikal_Event(ObjectMaster* obj)
 		InitCollision(obj, &TikalCol, 1, 4u);
 		data->field_6 = 0;
 		data->Index = 0 + rand() % 3;
+		data->Rotation.y = 0x0;
 		data->Position = TikalSpot[data->Index];
+		if (data->Index == 1)
+		{
+			Load_ChaoEvent();
+		}
 		obj->DisplaySub = Tikal_CameoDisplay;
 		data->Action++;
 		break;
@@ -125,9 +220,8 @@ void Tikal_Event(ObjectMaster* obj)
 		{
 			if (Controllers[0].press & Buttons_Y)
 			{
-				data->Rotation.y = P1->Rotation.y;
 				MainCharObj2[0]->Speed = { 0, 0, 0 };
-				LookAt(&data->Position, &P1->Position, nullptr, &data->Rotation.y);
+
 				DoNextAction_r(0, 9, 0);
 				const char* text = getTikalDialogue(data->Index);
 				if (!text)
@@ -141,22 +235,28 @@ void Tikal_Event(ObjectMaster* obj)
 
 		if (++data->field_6 == timerWalk)
 		{
-			data->Action++;
-			data->field_6 = 0;
-		}
-		
-		break;
-	case walking:
-		if (data->Index == masterEmeraldPos)
-		{
-			//data->Position.x+= 0.5f;
+			if (data->Index == gardenPos) {
+				data->Action++;
+				data->field_6 = 0;
+			}
+			else {
+				data->Action = ending;
+			}
 		}
 
-		if (++data->field_6 == timerWalk)
+		break;
+	case walking:
+
+		if (data->Position.x > destTikalWalkChao)
 		{
-			data->Action = init;
-			data->field_6 = 0;
+			data->Position.x -= 0.3f;
 		}
+		else {
+			data->field_6 = 0;
+			data->Rotation.y += 0x8000;
+			data->Action = ending;
+		}
+
 		break;
 	case transition:
 		if (++data->field_6 == 80)
@@ -165,18 +265,30 @@ void Tikal_Event(ObjectMaster* obj)
 			data->Action = standing;
 		}
 		break;
+	case ending:
+		if (++data->field_6 == 200)
+		{
+			FreeEntityCollision(obj);
+			tikalLeaving = true;
+			data->field_6 = 0;
+			data->Action = init;
+		}
+		return;
 	}
 
-	AddToCollisionList(obj);
+	if (data->Action >= standing && data->Action != ending)
+		AddToCollisionList(obj);
 }
 
-
-
-void Load_Tikal()
+void Load_TikalAndChao()
 {
 	TikalMDL = LoadMDL("Tikal", ModelFormat_Chunk);
 	TikalStandMotion = LoadAnim("ti_wait.nam");
 	TikalMoveMotion = LoadAnim("ti_walk.nam");
-
 	LoadTextureList("TIKAL_DC", &Tikal_texlist);
+
+	ChaoMDL = LoadMDL("ChaoMDL", ModelFormat_Chunk);
+	ChaoStandMotion = LoadAnim("chao_anim0");
+	ChaoSingMotion = LoadAnim("chao_anim1");
+	LoadTextureList("EV_ALIFE_DC", &ChaoEV_texlist);
 }

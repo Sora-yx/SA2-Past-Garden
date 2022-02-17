@@ -80,7 +80,6 @@ void CWE_FixesOnFrames()
 
 		MainCharObj1[i]->Position.y = playerPosY;
 	}
-
 }
 
 void CWE_PosYFixes() {
