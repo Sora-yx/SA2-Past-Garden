@@ -8,6 +8,8 @@ static NJS_TEXLIST PAST01BG_TEXLIST = { arrayptrandlength(PAST01BG_TEXNAME, Uint
 static ModelInfo* WaterMdl[2];
 static Trampoline* LoadLighting_t = nullptr;
 
+static NJS_TEXNAME WaterSlide_TEXNAME[12]{};
+static NJS_TEXLIST WaterSlide_TEXLIST = { arrayptrandlength(WaterSlide_TEXNAME, Uint32) };
 
 uint8_t TimeOfDay = Day;
 
@@ -85,9 +87,9 @@ static void __declspec(naked) LoadLStageLightASM()
     }
 }
 
-
 int countTexSea = 73;
 int countTexFountain = 59;
+int counTexWaterSlide = 0;
 
 extern NJS_TEXLIST PAST01_TEXLIST;
 
@@ -101,19 +103,28 @@ void Animate_Water()
         countTexSea++;
     }
 
+    if (TimeTotal % 2 == 0) {
+        counTexWaterSlide++;
+    }
+
     if (countTexFountain >= 73)
         countTexFountain = 59;
 
     if (countTexSea >= 83)
         countTexSea = 73;
 
+    if (counTexWaterSlide >= LengthOfArray(WaterSlide_TEXNAME))
+        counTexWaterSlide = 0;
+
     //fountain
     PAST01_TEXLIST.textures[57].texaddr = PAST01_TEXLIST.textures[countTexFountain].texaddr;
 
     //sea
     PAST01_TEXLIST.textures[6].texaddr = PAST01_TEXLIST.textures[countTexSea].texaddr;
-}
 
+    //waterslide
+    PAST01_TEXLIST.textures[58].texaddr = WaterSlide_TEXLIST.textures[counTexWaterSlide].texaddr;
+}
 
 void DrawWater(ObjectMaster* obj, char id)
 {
@@ -125,7 +136,6 @@ void DrawWater(ObjectMaster* obj, char id)
     njTranslateV(0, &pos);
     DrawObject(WaterMdl[id]->getmodel());
     njPopMatrix(1u);
-
 }
 
 void __cdecl PastGarden_Display(ObjectMaster* a1)
@@ -157,6 +167,8 @@ void __cdecl PastGarden_Display(ObjectMaster* a1)
 void Load_skyboxModel()
 {
     LoadTextureList("MR_SKY00_DC", &PAST01BG_TEXLIST);
+    LoadTextureList("waterslide", &WaterSlide_TEXLIST);
+
     Past_BG = LoadMDL("past-skybox", ModelFormat_Chunk);
 
     for (size_t i = 0; i < LengthOfArray(WaterMdl); i++) {
