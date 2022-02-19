@@ -6,7 +6,7 @@ void MusicEvent(ObjectMaster* obj)
 {
 	EntityData1* data = obj->Data1.Entity;
 
-	if (GameState != GameStates_Ingame && !playedOnce) {
+	if (GameState != GameStates_Ingame && GameState != GameStates_Pause) {
 		StopMusic(); //sa2 spam ResetMusic function so we force it to be quiet for a bit.
 		return;
 	}
@@ -29,6 +29,11 @@ void MusicEvent(ObjectMaster* obj)
 				PlayPastGardenMusic();
 				data->Action++;
 			}
+		}
+		else if (playedOnce)
+		{
+			PlayPastGardenMusic();
+			data->Action++;
 		}
 		break;
 	case 2:
