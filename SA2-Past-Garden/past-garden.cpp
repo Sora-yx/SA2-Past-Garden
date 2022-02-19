@@ -5,7 +5,7 @@
 
 static LandTableInfo* PastLandInfo = nullptr;
 static NJS_TEXNAME PAST01_TEXNAME[83]{};
-static NJS_TEXLIST PAST01_TEXLIST = { arrayptrandlength(PAST01_TEXNAME, Uint32) };
+NJS_TEXLIST PAST01_TEXLIST = { arrayptrandlength(PAST01_TEXNAME, Uint32) };
 static const TexPackInfo PAST01_TEXINFO = { "PAST01_DC", &PAST01_TEXLIST };
 
 float OOBLimit = -150.0f;
@@ -80,31 +80,6 @@ void Load_PastGarden()
 	return;
 }
 
-int countTexSea = 73;
-int countTexFountain = 59;
-
-void Animate_Water()
-{
-	if (TimeTotal % 3 == 0) {
-		countTexFountain++;
-	}
-
-	if (TimeTotal % 4 == 0) {
-		countTexSea++;
-	}
-
-	if (countTexFountain >= 73)
-		countTexFountain = 59;
-
-	if (countTexSea >= 83)
-		countTexSea = 73;
-
-	//fountain
-	PAST01_TEXLIST.textures[57].texaddr = PAST01_TEXLIST.textures[countTexFountain].texaddr;
-
-	//sea
-	PAST01_TEXLIST.textures[6].texaddr = PAST01_TEXLIST.textures[countTexSea].texaddr;
-}
 
 void Manage_SoundEffect(ObjectMaster* a1)
 {
@@ -239,4 +214,6 @@ void init_PastGarden_Level()
 	init_WaterHack();
 
 	ChaoGardenNeutral_Delete_t = new Trampoline((int)0x54CC10, (int)0x54CC15, Delete_PastGarden);
+
+	initTimeOfDay_Hack();
 }
