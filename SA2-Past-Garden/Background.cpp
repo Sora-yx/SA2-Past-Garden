@@ -8,12 +8,6 @@ static NJS_TEXLIST PAST01BG_TEXLIST = { arrayptrandlength(PAST01BG_TEXNAME, Uint
 static ModelInfo* WaterMdl[2];
 static Trampoline* LoadLighting_t = nullptr;
 
-enum TimeOfDay : uint8_t
-{
-    Day,
-    Evening,
-    Night
-};
 
 uint8_t TimeOfDay = Day;
 

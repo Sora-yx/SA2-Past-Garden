@@ -79,7 +79,6 @@ const char* getTikalDialogue(int index)
 	}
 }
 
-
 void EV_Chao_Display(ObjectMaster* obj)
 {
 	EntityData1* data = obj->Data1.Entity;
@@ -147,7 +146,6 @@ void Load_ChaoEvent()
 	}
 }
 
-
 void TikalChao_Delete() {
 	FreeMDL(TikalMDL);
 	FreeAnim(TikalStandMotion);
@@ -192,7 +190,7 @@ void Tikal_Event(ObjectMaster* obj)
 		{
 			int rng = rand() % 2;
 
-			if (rng)
+			if (rng && TimeOfDay != Night)
 			{
 				tikalLeaving = false;
 				data->Action++;
@@ -266,7 +264,7 @@ void Tikal_Event(ObjectMaster* obj)
 		}
 		break;
 	case ending:
-		if (++data->field_6 == 200)
+		if (++data->field_6 == 120)
 		{
 			FreeEntityCollision(obj);
 			tikalLeaving = true;

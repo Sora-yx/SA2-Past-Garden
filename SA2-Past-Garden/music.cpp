@@ -21,10 +21,31 @@ void MusicEvent(ObjectMaster* obj)
 	case 1:
 		if (IsPlayerInsideSphere(&data->Position, 100))
 		{
+			if (TimeOfDay != Night)
+			{
+				PlayMusic("tical.adx");
+				ResetMusic();
+				playedOnce = true;
+				data->Action++;
+			}
+			else {
+				data->Action = 3;
+			}
+		}
+		break;
+	case 2:
+		if (TimeOfDay == Night)
+		{
+			StopMusic();
+			data->Action++;
+		}
+		break;
+	case 3:
+		if (TimeOfDay != Night)
+		{
 			PlayMusic("tical.adx");
 			ResetMusic();
-			playedOnce = true;
-			data->Action++;
+			data->Action--;
 		}
 		break;
 	default:
@@ -38,7 +59,7 @@ void Stop_Music_r()
 {
 	StopMusic();
 
-	if (playedOnce)
+	if (playedOnce && TimeOfDay != Night)
 	{
 		PlayMusic("tical.adx");
 		ResetMusic();
