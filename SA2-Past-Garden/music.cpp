@@ -27,7 +27,6 @@ void MusicEvent(ObjectMaster* obj)
 			}
 			else {
 				PlayPastGardenMusic();
-				playedOnce = true;
 				data->Action++;
 			}
 		}
@@ -73,6 +72,7 @@ void PlayPastGardenMusic()
 	else
 		PlayMusic("chao_g_bgm_n.adx");
 
+	playedOnce = true;
 	ResetMusic();
 }
 

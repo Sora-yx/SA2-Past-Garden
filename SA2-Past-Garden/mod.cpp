@@ -3,6 +3,8 @@
 HelperFunctions HelperFunctionsGlobal;
 const char* error = "[Past Garden]: WARNING: Your version of the Mod Loader is old, the mod won't work properly.\nPlease update your Mod Loader for the best experience.";
 
+void SetTimeOfDay(uint8_t time);
+
 extern "C" {
 
 	__declspec(dllexport) void __cdecl Init(const char* path, const HelperFunctions& helperFunctions)

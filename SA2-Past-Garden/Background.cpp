@@ -5,6 +5,8 @@ static ModelInfo* Past_BG;
 static NJS_TEXNAME PAST01BG_TEXNAME[9]{};
 static NJS_TEXLIST PAST01BG_TEXLIST = { arrayptrandlength(PAST01BG_TEXNAME, Uint32) };
 
+static NJS_TEXLIST PAST01BG_DAY_TEXLIST = { arrayptrandlength(PAST01BG_TEXNAME, Uint32) }; //used to save the original tex
+
 static ModelInfo* WaterMdl[2];
 static Trampoline* LoadLighting_t = nullptr;
 
@@ -13,29 +15,19 @@ static NJS_TEXLIST WaterSlide_TEXLIST = { arrayptrandlength(WaterSlide_TEXNAME, 
 
 uint8_t TimeOfDay = Day;
 
+static NJS_TEXNAME dayText[3] = { { (char*)"mra_008s_hirusorab", 0, 0 }, { (char*)"mrasc_016s_hiruumi", 0, 0 }, { (char*)"mrasc_256s_hirusoraa", 0, 0 } };
+static NJS_TEXNAME eveningText[3] = { { (char*)"mrasc_008s_yusorab", 0, 0 }, { (char*)"mrasc_016s_yuuumi", 0, 0 }, { (char*)"mrasc_256s_yuusoraa", 0, 0 } };
+static NJS_TEXNAME nightTex[3] = { { (char*)"mrasc_016s_yoruumi", 0, 0 }, { (char*)"mrasc_064s_yorusorab", 0, 0 }, { (char*)"mrasc_256s_yorusoraa", 0, 0 } };
+
+static NJS_TEXLIST timeOfDayTexList[3] = {
+    dayText, 2,
+    eveningText, 2,
+    nightTex, 2,
+};
+
 void SetTimeOfDay(uint8_t time)
 {
     TimeOfDay = time;
-
-    switch (TimeOfDay)
-    {
-    case Day:
-    default:
-        PAST01BG_TEXLIST.textures[0].texaddr = PAST01BG_TEXLIST.textures[0].texaddr;
-        PAST01BG_TEXLIST.textures[1].texaddr = PAST01BG_TEXLIST.textures[1].texaddr;
-        PAST01BG_TEXLIST.textures[2].texaddr = PAST01BG_TEXLIST.textures[2].texaddr;
-        break;
-    case Evening:
-        PAST01BG_TEXLIST.textures[0].texaddr = PAST01BG_TEXLIST.textures[6].texaddr;
-        PAST01BG_TEXLIST.textures[1].texaddr = PAST01BG_TEXLIST.textures[7].texaddr;
-        PAST01BG_TEXLIST.textures[2].texaddr = PAST01BG_TEXLIST.textures[8].texaddr;
-        break;
-    case Night:
-        PAST01BG_TEXLIST.textures[0].texaddr = PAST01BG_TEXLIST.textures[3].texaddr;
-        PAST01BG_TEXLIST.textures[1].texaddr = PAST01BG_TEXLIST.textures[4].texaddr;
-        PAST01BG_TEXLIST.textures[2].texaddr = PAST01BG_TEXLIST.textures[5].texaddr;
-        break;
-    }
 }
 
 static inline Sint32 LoadStageLight_origin(const char* filename)
@@ -66,7 +58,7 @@ Sint32 LoadStageLight_r(const char* filename)
         {
             SetTimeOfDay(Night);
         }
-        else if (text == "stg00_cld_light.bin")
+        else if (TimeOfDay == Night && text == "stg00_cld_light.bin" || text == "stg00_light.bin")
         {
             SetTimeOfDay(Day);
         }
@@ -151,7 +143,7 @@ void __cdecl PastGarden_Display(ObjectMaster* a1)
     njPushMatrix(0);
     njTranslate(0, CameraData.Position.x, 0.0, CameraData.Position.z);
     njScale(0, 2.0, 2.0, 2.0);
-    njSetTexture(&PAST01BG_TEXLIST);
+    njSetTexture(&timeOfDayTexList[TimeOfDay]);
     njScaleV_(&Skybox_Scale);
     DrawObject(Past_BG->getmodel());
     njScale(0, 1.0, 1.0, 1.0);
@@ -175,6 +167,18 @@ void Load_skyboxModel()
         std::string str = "Water" + std::to_string(i);
         WaterMdl[i] = LoadMDL(str.c_str(), ModelFormat_Chunk);
     }
+
+    timeOfDayTexList[Day].textures[0] = PAST01BG_TEXLIST.textures[0];
+    timeOfDayTexList[Day].textures[1] = PAST01BG_TEXLIST.textures[1];
+    timeOfDayTexList[Day].textures[2] = PAST01BG_TEXLIST.textures[2];
+
+    timeOfDayTexList[Evening].textures[0] = PAST01BG_TEXLIST.textures[6];
+    timeOfDayTexList[Evening].textures[1] = PAST01BG_TEXLIST.textures[7];
+    timeOfDayTexList[Evening].textures[2] = PAST01BG_TEXLIST.textures[8];
+
+    timeOfDayTexList[Night].textures[0] = PAST01BG_TEXLIST.textures[3];
+    timeOfDayTexList[Night].textures[1] = PAST01BG_TEXLIST.textures[4];
+    timeOfDayTexList[Night].textures[2] = PAST01BG_TEXLIST.textures[5];
 }
 
 void initTimeOfDay_Hack()

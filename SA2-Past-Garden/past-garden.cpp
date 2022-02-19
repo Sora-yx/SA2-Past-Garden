@@ -14,10 +14,9 @@ Trampoline* ChaoGardenNeutral_Delete_t = nullptr;
 
 void Init_NewTreePos() {
 	TreePos[0] = { 269, -1, 444 };
-	TreePos[1] = { -189, 0, -381 };
+	TreePos[1] = { -351, 0, -227 };
 	TreePos[2] = { 327, 0, 247 };
 }
-
 
 void Delete_PastGarden(ObjectMaster* obj) {
 
@@ -110,10 +109,8 @@ void Manage_SoundEffectWater(ObjectMaster* a1, NJS_VECTOR pos, char vol)
 	unsigned __int16 timer;
 	int v3;
 
-
-
 	data = a1->Data1.Entity;
-	//pos.z = -100.0;
+
 	if (CurrentChaoArea == NextChaoArea)
 	{
 		Play3DSound_EntityAndPos((EntityData1*)a1, 1, &pos, vol);
@@ -212,7 +209,7 @@ void __cdecl Past_Garden_Manager(ObjectMaster* a1)
 	if (data->Action >= 2)
 	{
 
-		if (P1->Position.z < 350)
+		if (P1->Position.z < 450)
 			Manage_SoundEffectWater(a1, posFountain, 6);
 		else
 			Manage_SoundEffectWater(a1, posWater, 10);
