@@ -191,9 +191,7 @@ void Tikal_Event(ObjectMaster* obj)
 	case init:
 		if (++data->field_6 == timerCameo)
 		{
-			int rng = rand() % 2;
-
-			if (rng && TimeOfDay != Night)
+			if (TimeOfDay != Night)
 			{
 				tikalLeaving = false;
 				data->Action++;
