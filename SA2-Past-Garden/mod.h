@@ -1,5 +1,8 @@
 #pragma once
 
+extern bool quietMusic;
+extern bool tikalTheme;
+
 void ReadConfig(const char* path);
 
 extern HelperFunctions HelperFunctionsGlobal;
@@ -17,7 +20,7 @@ void Tikal_Event(ObjectMaster* obj);
 void CWE_FixesOnFrames();
 void Animate_Water();
 void initTimeOfDay_Hack();
-
+void PlayPastGardenMusic();
 
 enum TimeOfDay : uint8_t
 {

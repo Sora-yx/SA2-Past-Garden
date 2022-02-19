@@ -21,20 +21,19 @@ void MusicEvent(ObjectMaster* obj)
 	case 1:
 		if (IsPlayerInsideSphere(&data->Position, 100))
 		{
-			if (TimeOfDay != Night)
+			if (TimeOfDay == Night && quietMusic)
 			{
-				PlayMusic("tical.adx");
-				ResetMusic();
-				playedOnce = true;
-				data->Action++;
+				data->Action = 3;
 			}
 			else {
-				data->Action = 3;
+				PlayPastGardenMusic();
+				playedOnce = true;
+				data->Action++;
 			}
 		}
 		break;
 	case 2:
-		if (TimeOfDay == Night)
+		if (TimeOfDay == Night && quietMusic)
 		{
 			StopMusic();
 			data->Action++;
@@ -43,8 +42,7 @@ void MusicEvent(ObjectMaster* obj)
 	case 3:
 		if (TimeOfDay != Night)
 		{
-			PlayMusic("tical.adx");
-			ResetMusic();
+			PlayPastGardenMusic();
 			data->Action--;
 		}
 		break;
@@ -59,15 +57,23 @@ void Stop_Music_r()
 {
 	StopMusic();
 
-	if (playedOnce && TimeOfDay != Night)
+	if (playedOnce && TimeOfDay != Night && !quietMusic)
 	{
-		PlayMusic("tical.adx");
-		ResetMusic();
 		return;
 	}
 
 	LoadObject(2, "EventPast_MusicManager", MusicEvent, LoadObj_Data1);
 	return;
+}
+
+void PlayPastGardenMusic()
+{
+	if (tikalTheme)
+		PlayMusic("tical.adx");
+	else
+		PlayMusic("chao_g_bgm_n.adx");
+
+	ResetMusic();
 }
 
 void init_Music()
