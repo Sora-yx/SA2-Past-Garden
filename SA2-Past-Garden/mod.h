@@ -10,6 +10,7 @@ void init_PastGarden_Level();
 void Load_skyboxModel();
 void __cdecl PastGarden_Display(ObjectMaster* a1);
 void init_Music();
+void Camera_OnFrames();
 
 const char PastGarden = 1;
 extern uint8_t TimeOfDay;

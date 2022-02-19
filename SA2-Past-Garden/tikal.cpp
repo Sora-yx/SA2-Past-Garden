@@ -17,8 +17,8 @@ NJS_VECTOR ChaoSpot[4] = { { -119, 0.9f, 347 }, { -123, 0.9f, 368 }, {-99, 0.9f 
 
 CollisionData TikalCol = { 0, (CollisionShapes)0, 0x77, 0xE0, 0x8000, {0.0}, 4.0, 0.0, 0.0, 0.0, 0, 0, 0 };
 
-const int timerCameo = 120;
-const int timerWalk = 600;
+const int timerCameo = 7200;
+const int timerWalk = 5000;
 const float destTikalWalkChao = -250.0f;
 bool tikalLeaving = false;
 
@@ -79,6 +79,7 @@ const char* getTikalDialogue(int index)
 	}
 }
 
+
 void EV_Chao_Display(ObjectMaster* obj)
 {
 	EntityData1* data = obj->Data1.Entity;
@@ -94,6 +95,7 @@ void EV_Chao_Display(ObjectMaster* obj)
 		DrawMotionAndObject(ChaoStandMotion->getmotion(), ChaoMDL->getmodel(), FrameCountIngame % ChaoStandMotion->getmotion()->nbFrame);
 	else
 		DrawMotionAndObject(ChaoSingMotion->getmotion(), ChaoMDL->getmodel(), FrameCountIngame % ChaoSingMotion->getmotion()->nbFrame);
+
 
 	njPopMatrix(1u);
 	ResetMaterial();
@@ -114,6 +116,7 @@ void EV_Chao(ObjectMaster* obj)
 		data->Action++;
 		break;
 	case 1:
+
 		if (tikalLeaving)
 		{
 			data->Action++;
@@ -239,6 +242,7 @@ void Tikal_Event(ObjectMaster* obj)
 			}
 			else {
 				data->Action = ending;
+				data->field_6 = 0;
 			}
 		}
 
@@ -264,7 +268,7 @@ void Tikal_Event(ObjectMaster* obj)
 		}
 		break;
 	case ending:
-		if (++data->field_6 == 120)
+		if (++data->field_6 == 60)
 		{
 			FreeEntityCollision(obj);
 			tikalLeaving = true;

@@ -12,6 +12,7 @@ float OOBLimit = -150.0f;
 
 Trampoline* ChaoGardenNeutral_Delete_t = nullptr;
 
+
 void Init_NewTreePos() {
 	TreePos[0] = { 269, -1, 444 };
 	TreePos[1] = { -351, 0, -227 };
@@ -131,14 +132,12 @@ void Manage_SoundEffectWater(ObjectMaster* a1, NJS_VECTOR pos, char vol)
 	}
 }
 
-
 void SpawnAllElements()
 {
 	AL_MinimalCreate();
 	SpawnAllChaoInGarden();
 	Load_ChaoTree();
 }
-
 
 void __cdecl Past_Garden_Manager(ObjectMaster* a1)
 {
@@ -161,9 +160,6 @@ void __cdecl Past_Garden_Manager(ObjectMaster* a1)
 
 		break;
 	case 1:
-
-
-
 		if (P1->Position.z == startPosLeaveCave.z) {
 			P1->Rotation.y = rot;
 			SpawnAllElements();
@@ -215,6 +211,22 @@ void __cdecl Past_Garden_Manager(ObjectMaster* a1)
 			Manage_SoundEffectWater(a1, posWater, 10);
 
 		Animate_Water();
+	}
+}
+
+void Camera_OnFrames()
+{
+	if (!PointerToNormalCamera || !MainCharObj1[0] || CurrentLevel != LevelIDs_ChaoWorld || CurrentChaoArea != PastGarden)
+		return;
+
+	if (MainCharObj1[0]->Position.z > 1400) {
+		PointerToNormalCamera->Data1.Entity->Position.y = MainCharObj1[0]->Position.y + 15;
+	}
+	else if (MainCharObj1[0]->Position.z < 1250 && MainCharObj1[0]->Position.z > 600) {
+		if (MainCharObj1[0]->Rotation.y > 0x8000) {
+			PointerToNormalCamera->Data1.Entity->Position.y = MainCharObj1[0]->Position.y + 20;
+			PointerToNormalCamera->Data1.Entity->Position.z = MainCharObj1[0]->Position.z + 60;
+		}
 	}
 }
 
