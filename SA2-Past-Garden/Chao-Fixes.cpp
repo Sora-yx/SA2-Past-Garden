@@ -100,7 +100,7 @@ void CWE_PosYFixes() {
 
 void init_ChaoFixes_Hack()
 {
-	sub_54AC70_t = new Trampoline((int)0x54AC70, (int)0x54AC76, sub_54AC70ASM);
+	//sub_54AC70_t = new Trampoline((int)0x54AC70, (int)0x54AC76, sub_54AC70ASM);
 	Chao_Main_t = new Trampoline((int)Chao_Main, (int)Chao_Main + 0x8, Chao_Main_r);
 
 	WriteCall((void*)0x43CF86, CWE_PosYFixes); //fix pos Y issue with Chao World Extended mod
