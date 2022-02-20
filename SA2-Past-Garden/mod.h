@@ -22,6 +22,7 @@ void CWE_FixesOnFrames();
 void Animate_Water();
 void initTimeOfDay_Hack();
 void PlayPastGardenMusic();
+void __cdecl PastGarden_DelayedDisplay(ObjectMaster* a1);
 
 enum TimeOfDay : uint8_t
 {

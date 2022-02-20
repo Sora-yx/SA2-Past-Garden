@@ -155,8 +155,10 @@ void __cdecl Past_Garden_Manager(ObjectMaster* a1)
 	{
 	case 0:
 
-		if (++data->field_6 == 5)
+		if (++data->field_6 == 5) {
+			a1->DisplaySub_Delayed1 = PastGarden_DelayedDisplay;
 			data->Action++;
+		}
 
 		break;
 	case 1:

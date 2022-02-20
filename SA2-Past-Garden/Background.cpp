@@ -149,7 +149,10 @@ void __cdecl PastGarden_Display(ObjectMaster* a1)
     njScale(0, 1.0, 1.0, 1.0);
     njPopMatrix(1u);
     njControl3D_Restore();
+}
 
+void __cdecl PastGarden_DelayedDisplay(ObjectMaster* a1)
+{
     for (int i = 0; i < LengthOfArray(WaterMdl); i++)
     {
         DrawWater(a1, i);

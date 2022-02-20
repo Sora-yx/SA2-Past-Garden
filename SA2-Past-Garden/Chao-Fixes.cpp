@@ -75,8 +75,8 @@ void CWE_FixesOnFrames()
 
 	for (uint8_t i = 0; i < 2; i++) {
 
-		if (!MainCharObj1[i] || MainCharObj1[i]->Position.y > 0.0f)
-			return;
+		if (!MainCharObj1[i])
+			continue;
 
 		MainCharObj1[i]->Position.y = playerPosY;
 	}
