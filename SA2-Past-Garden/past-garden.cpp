@@ -240,7 +240,6 @@ void init_PastGarden_Level()
 	WriteJump((void*)0x54C690, PastGarden_Display); //prevent display to run
 	WriteJump(Chao_OOBLimit, Chao_OOBLimit_r); //fix OOB limit
 
-
 	Init_NewStartPos();
 	Init_NewTreePos();
 	init_LoadSetObj();

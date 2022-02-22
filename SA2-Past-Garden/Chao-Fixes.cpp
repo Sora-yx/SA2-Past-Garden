@@ -7,6 +7,7 @@ float ColliDistance = 800.0f;
 //a Big garden creates stupid bugs if the player is too far, we hack some functions to prevent them to run if so.
 
 DataPointer(int, ChaoEnabled, 0x01DBE634);
+
 void Chao_Main_r(ObjectMaster* obj)
 {
 	if (CurrentChaoArea == PastGarden && !IsPlayerInsideSphere(&obj->Data1.Entity->Position, 500))

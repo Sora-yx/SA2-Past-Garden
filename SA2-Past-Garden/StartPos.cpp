@@ -4,6 +4,10 @@ NJS_VECTOR startPos = { 24.0f, -41.00f, 1475.0f };
 
 NJS_VECTOR startPosLeaveCave = { 0.31f, 90.0, 75.39f };
 
+NJS_VECTOR transporterPos = { -365, 0, 236 };
+NJS_VECTOR TVPos = { 251, 0, 301 };
+NJS_VECTOR BoxPos = { 207, 0, 308 };
+
 //NJS_VECTOR startPos = { -63, 0, 387 };
 
 NJS_VECTOR ChaoSpawnPoint_Past[16]
@@ -34,6 +38,7 @@ void Init_NewChaoStartPos()
     }
 }
 
+
 void Init_NewStartPos()
 {
     //init new start pos 
@@ -45,6 +50,25 @@ void Init_NewStartPos()
     WriteData((float**)0x52b882, &startPosLeaveCave.x);
     WriteData((float**)0x52b88A, &startPosLeaveCave.y);
     WriteData((float**)0x52b893, &startPosLeaveCave.z);
+
+    //Tansporter new pos
+    WriteData((float**)0x54ca00, &transporterPos.x);
+    WriteData((float**)0x54ca10, &transporterPos.y);
+    WriteData((float**)0x54ca1A, &transporterPos.z);
+    WriteData<1>((int*)0x54ca31, 0x0); //rotation
+
+    //ball doesn't want to spawn for some reason.
+    
+    //tv new pos
+    WriteData((float**)0x54caba, &TVPos.x);
+    WriteData((float**)0x54cac9, &TVPos.y);
+    WriteData((float**)0x54cad3, &TVPos.z);
+
+    //box new pos
+    WriteData((float**)0x54cb00, &BoxPos.x);
+    WriteData((float**)0x54cb0f, &BoxPos.y);
+    WriteData((float**)0x54cb19, &BoxPos.z);
+
 
     Init_NewChaoStartPos();
 }
