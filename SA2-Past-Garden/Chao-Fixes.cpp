@@ -3,8 +3,10 @@
 Trampoline* Chao_Main_t = nullptr;
 Trampoline* sub_54AC70_t = nullptr;
 
+float ColliDistance = 800.0f;
 //a Big garden creates stupid bugs if the player is too far, we hack some functions to prevent them to run if so.
 
+DataPointer(int, ChaoEnabled, 0x01DBE634);
 void Chao_Main_r(ObjectMaster* obj)
 {
 	if (CurrentChaoArea == PastGarden && !IsPlayerInsideSphere(&obj->Data1.Entity->Position, 500))
@@ -98,11 +100,21 @@ void CWE_PosYFixes() {
 	CollisionLoop();
 }
 
+DataPointer(float, FLOAT_00905820, 0x905820);
+
 void init_ChaoFixes_Hack()
 {
 	//sub_54AC70_t = new Trampoline((int)0x54AC70, (int)0x54AC76, sub_54AC70ASM);
 	Chao_Main_t = new Trampoline((int)Chao_Main, (int)Chao_Main + 0x8, Chao_Main_r);
 
 	WriteCall((void*)0x43CF86, CWE_PosYFixes); //fix pos Y issue with Chao World Extended mod
+
+	//WriteData<6>((int*)0x796b5c, 0x90);
+	//WriteData<1>((int*)0x796B20, 0xC3);
+
+	WriteData<6>((int*)0x47d639, 0x90);
+	WriteData<2>((int*)0x47d43c, 0x90);
+
+	//WriteData((float**)0x47d62B, &ColliDistance);
 	return;
 }

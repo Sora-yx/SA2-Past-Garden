@@ -253,7 +253,6 @@ void init_PastGarden_Level()
 	WriteData<5>((int*)0x54C9C2, 0x90);  //spawn chao create	
 	WriteData<5>((int*)0x54C9C7, 0x90);  //Chao Tree
 
-
 	init_ChaoFixes_Hack();
 	init_WaterHack();
 

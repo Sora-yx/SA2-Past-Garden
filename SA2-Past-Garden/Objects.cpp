@@ -380,6 +380,7 @@ ObjectListEntry PastObjectList_list[] = {
 	{ (LoadObj)2, 3, 0, 0, nullptr,  } /* "O PEOPLE" */,
 	{ (LoadObj)10, 3, 0, 0,  nullptr,  } /* "CMN KUSA" */,
 	{ (LoadObj)2, 2, 0, 0, EggWarp_Main,  (char*)"ENTRANCE" } /* "ENTRANCE" */,
+	{ (LoadObj)2, 2, 0, 0, C_CLIMB, (char*)"C_CLIMB"}
 };
 //(ObjectFuncPtr)0x55AC60
 
