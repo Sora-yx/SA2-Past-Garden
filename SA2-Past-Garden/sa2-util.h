@@ -1,9 +1,23 @@
 #pragma once
 
+struct __declspec(align(4)) WaypointThing__
+{
+	int x;
+	int z;
+};
+
+struct WaypointThing_
+{
+	int index;
+	WaypointThing__ array[512]; //sa2 size different to sadx
+};
+
+
 VoidFunc(Chao_OOBLimit, 0x52B200);
 DataPointer(float, flt_1657CEC, 0x1657CEC);
 DataArray(NJS_VECTOR, TreePos, 0x1366B30, 30);
 ObjectFunc(C_CLIMB, 0x55AB20); //used to make Chao Climb!
+DataArray(WaypointThing_, WaypointThings, 0x1A15938, 16);
 
 //void __usercall PlaySound4(EntityData1 *a1@<ebx>, int a2@<edi>, NJS_VECTOR *pos@<esi>, char a4, char a5, __int16 a6)
 static const void* const Play3DSound2_EntityAndPosPtr = (void*)0x437590;

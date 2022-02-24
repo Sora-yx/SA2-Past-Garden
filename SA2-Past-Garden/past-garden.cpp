@@ -99,6 +99,7 @@ void Load_PastGarden()
 		ExecFunc_ptr = Exec_Load;
 	}
 
+
 	LoadSplashTextures();
 
 	return;
@@ -156,6 +157,7 @@ void __cdecl Past_Garden_Manager(ObjectMaster* a1)
 	case 0:
 
 		if (++data->field_6 == 5) {
+			Move_WayPoints_ToNewPose();
 			a1->DisplaySub_Delayed1 = PastGarden_DelayedDisplay;
 			data->Action++;
 		}
@@ -258,4 +260,5 @@ void init_PastGarden_Level()
 	ChaoGardenNeutral_Delete_t = new Trampoline((int)0x54CC10, (int)0x54CC15, Delete_PastGarden);
 
 	initTimeOfDay_Hack();
+	initNewWayPoints();
 }

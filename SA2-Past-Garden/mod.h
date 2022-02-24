@@ -23,6 +23,8 @@ void Animate_Water();
 void initTimeOfDay_Hack();
 void PlayPastGardenMusic();
 void __cdecl PastGarden_DelayedDisplay(ObjectMaster* a1);
+void initNewWayPoints();
+void Move_WayPoints_ToNewPose();
 
 enum TimeOfDay : uint8_t
 {

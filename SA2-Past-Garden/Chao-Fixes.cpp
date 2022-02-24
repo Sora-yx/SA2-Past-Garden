@@ -110,11 +110,6 @@ void init_ChaoFixes_Hack()
 
 	WriteCall((void*)0x43CF86, CWE_PosYFixes); //fix pos Y issue with Chao World Extended mod
 
-	//WriteData<6>((int*)0x796b5c, 0x90);
-	//WriteData<1>((int*)0x796B20, 0xC3);
-
-	WriteData<6>((int*)0x47d639, 0x90);
-	WriteData<2>((int*)0x47d43c, 0x90);
 
 	//WriteData((float**)0x47d62B, &ColliDistance);
 	return;
