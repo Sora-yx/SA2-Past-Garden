@@ -446,7 +446,6 @@ void Move_WayPoints_ToNewPose()
 	}
 }
 
-
 void initNewWayPoints()
 {
 	WriteData((int*)0x1362130, ePastGardenWaypoints, LengthOfArray(ePastGardenWaypoints));

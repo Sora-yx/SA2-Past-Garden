@@ -25,6 +25,7 @@ CollisionData EggWarpCol[] = {
 	{ 0, (CollisionShapes)0, 0x70, 0, 0x2400, {0.0, 4.8000002, 0.0}, 3.7, 0.0, 0.0, 0.0, 0, 0, 0},
 };
 
+bool isCaveRace = false;
 
 void FreeObjectsGarden()
 {
@@ -201,6 +202,7 @@ void EggWarp_Main(ObjectMaster* obj)
 		}
 		break;
 	case 4:
+		isCaveRace = true;
 		raceEntry = LoadObject(2, "raceEntry", (ObjectFuncPtr)0x55AC60, LoadObj_Data1 | LoadObj_Data2);
 		raceEntry->Data1.Entity->Scale = data->Scale;
 		raceEntry->Data1.Entity->Rotation = data->Rotation;

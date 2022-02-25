@@ -9,9 +9,9 @@ NJS_TEXLIST PAST01_TEXLIST = { arrayptrandlength(PAST01_TEXNAME, Uint32) };
 static const TexPackInfo PAST01_TEXINFO = { "PAST01_DC", &PAST01_TEXLIST };
 
 float OOBLimit = -150.0f;
+extern bool isCaveRace;
 
 Trampoline* ChaoGardenNeutral_Delete_t = nullptr;
-
 
 void Init_NewTreePos() {
 	TreePos[0] = { 269, -1, 444 };
@@ -47,7 +47,7 @@ void Delete_PastGarden(ObjectMaster* obj) {
 	{
 		ExecFunc_ptr = 0;
 	}
-
+	isCaveRace = false;
 	return;
 }
 void Chao_OOBLimit_r()
@@ -140,6 +140,7 @@ void SpawnAllElements()
 	Load_ChaoTree();
 }
 
+
 void __cdecl Past_Garden_Manager(ObjectMaster* a1)
 {
 	EntityData1* data = a1->Data1.Entity;
@@ -164,10 +165,11 @@ void __cdecl Past_Garden_Manager(ObjectMaster* a1)
 
 		break;
 	case 1:
-		if (P1->Position.z == startPosLeaveCave.z) {
+		if (isCaveRace) {
 			P1->Rotation.y = rot;
 			SpawnAllElements();
 			data->Action = 3;
+			isCaveRace = false;
 			return;
 		}
 		else
@@ -184,7 +186,6 @@ void __cdecl Past_Garden_Manager(ObjectMaster* a1)
 		}
 
 		data->Action++;
-
 
 		break;
 	case 2:
@@ -233,7 +234,6 @@ void Camera_OnFrames()
 		}
 	}
 }
-
 
 void init_PastGarden_Level()
 {
