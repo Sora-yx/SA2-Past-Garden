@@ -38,7 +38,6 @@ void Init_NewChaoStartPos()
     }
 }
 
-
 void Init_NewStartPos()
 {
     //init new start pos 
@@ -68,7 +67,6 @@ void Init_NewStartPos()
     WriteData((float**)0x54cb00, &BoxPos.x);
     WriteData((float**)0x54cb0f, &BoxPos.y);
     WriteData((float**)0x54cb19, &BoxPos.z);
-
 
     Init_NewChaoStartPos();
 }

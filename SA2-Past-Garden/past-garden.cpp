@@ -21,9 +21,7 @@ void Init_NewTreePos() {
 
 void Delete_PastGarden(ObjectMaster* obj) {
 
-
 	((decltype(Delete_PastGarden)*)ChaoGardenNeutral_Delete_t->Target())(obj);
-
 
 	PrintDebug("Delete Past Garden!\n");
 
@@ -47,9 +45,10 @@ void Delete_PastGarden(ObjectMaster* obj) {
 	{
 		ExecFunc_ptr = 0;
 	}
-	isCaveRace = false;
+
 	return;
 }
+
 void Chao_OOBLimit_r()
 {
 	Float* posY; // ecx
@@ -140,6 +139,41 @@ void SpawnAllElements()
 	Load_ChaoTree();
 }
 
+void CameraChildObj(ObjectMaster* a1)
+{
+	EntityData1* data = a1->Data1.Entity;
+
+	if (!PointerToNormalCamera || !MainCharObj1[0] || CurrentLevel != LevelIDs_ChaoWorld || CurrentChaoArea != PastGarden)
+		return;
+
+	switch (data->Action)
+	{
+	case 0:
+		data->Position = { -1, 0, 1365 };
+		data->Action++;	
+		break;
+	case 1:
+		if (IsPlayerInsideSphere(&data->Position, 60))
+		{
+			data->Action++;
+		}
+		PointerToNormalCamera->Data1.Entity->Position.y = MainCharObj1[0]->Position.y + 10;
+		PointerToNormalCamera->Data1.Entity->Position.z = MainCharObj1[0]->Position.z + 30;
+		break;
+	case 2:
+
+		if (MainCharObj1[0]->Position.z > 1400) {
+			PointerToNormalCamera->Data1.Entity->Position.y = MainCharObj1[0]->Position.y + 15;
+		}
+		else if (MainCharObj1[0]->Position.z < 1250 && MainCharObj1[0]->Position.z > 600) {
+			if (MainCharObj1[0]->Rotation.y > 0x8000) {
+				PointerToNormalCamera->Data1.Entity->Position.y = MainCharObj1[0]->Position.y + 20;
+				PointerToNormalCamera->Data1.Entity->Position.z = MainCharObj1[0]->Position.z + 60;
+			}
+		}
+		break;
+	}
+}
 
 void __cdecl Past_Garden_Manager(ObjectMaster* a1)
 {
@@ -152,6 +186,7 @@ void __cdecl Past_Garden_Manager(ObjectMaster* a1)
 
 	NJS_VECTOR posWater = { 219.0f, -30.00f, 1077.0f };
 	NJS_VECTOR posFountain = { 10, 85, 31 };
+
 
 	switch (data->Action)
 	{
@@ -177,6 +212,7 @@ void __cdecl Past_Garden_Manager(ObjectMaster* a1)
 			P1->Position = startPos;
 			P1->Rotation.y = rot;
 			data->Position = { 2, -12, 502 };
+			LoadChildObject(LoadObj_Data1, CameraChildObj, a1);
 		}
 
 		if (MainCharObj1[1]) {
@@ -189,6 +225,7 @@ void __cdecl Past_Garden_Manager(ObjectMaster* a1)
 
 		break;
 	case 2:
+
 		if (IsPlayerInsideSphere(&data->Position, 100))
 		{
 			SpawnAllElements();
@@ -221,18 +258,7 @@ void __cdecl Past_Garden_Manager(ObjectMaster* a1)
 
 void Camera_OnFrames()
 {
-	if (!PointerToNormalCamera || !MainCharObj1[0] || CurrentLevel != LevelIDs_ChaoWorld || CurrentChaoArea != PastGarden)
-		return;
 
-	if (MainCharObj1[0]->Position.z > 1400) {
-		PointerToNormalCamera->Data1.Entity->Position.y = MainCharObj1[0]->Position.y + 15;
-	}
-	else if (MainCharObj1[0]->Position.z < 1250 && MainCharObj1[0]->Position.z > 600) {
-		if (MainCharObj1[0]->Rotation.y > 0x8000) {
-			PointerToNormalCamera->Data1.Entity->Position.y = MainCharObj1[0]->Position.y + 20;
-			PointerToNormalCamera->Data1.Entity->Position.z = MainCharObj1[0]->Position.z + 60;
-		}
-	}
 }
 
 void init_PastGarden_Level()
