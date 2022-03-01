@@ -9,7 +9,6 @@ NJS_TEXLIST PAST01_TEXLIST = { arrayptrandlength(PAST01_TEXNAME, Uint32) };
 static const TexPackInfo PAST01_TEXINFO = { "PAST01_DC", &PAST01_TEXLIST };
 
 float OOBLimit = -150.0f;
-extern bool isCaveRace;
 
 Trampoline* ChaoGardenNeutral_Delete_t = nullptr;
 
@@ -200,11 +199,11 @@ void __cdecl Past_Garden_Manager(ObjectMaster* a1)
 
 		break;
 	case 1:
-		if (isCaveRace) {
+		if (LastChaoArea != 7) { //chao lobby
+			P1->Position = startPosAltar;
 			P1->Rotation.y = rot;
 			SpawnAllElements();
 			data->Action = 3;
-			isCaveRace = false;
 			return;
 		}
 		else

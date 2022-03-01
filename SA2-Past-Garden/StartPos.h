@@ -3,4 +3,4 @@
 void Init_NewStartPos();
 
 extern NJS_VECTOR startPos;
-extern NJS_VECTOR startPosLeaveCave;
+extern NJS_VECTOR startPosAltar;

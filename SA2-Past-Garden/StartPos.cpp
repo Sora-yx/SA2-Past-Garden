@@ -2,7 +2,7 @@
 
 NJS_VECTOR startPos = { 24.0f, -41.00f, 1475.0f };
 
-NJS_VECTOR startPosLeaveCave = { 0.31f, 90.0, 75.39f };
+NJS_VECTOR startPosAltar = { 0.31f, 90.0, 75.39f };
 
 NJS_VECTOR transporterPos = { -365, 0, 236 };
 NJS_VECTOR TVPos = { 251, 0, 301 };
@@ -32,7 +32,7 @@ NJS_VECTOR ChaoSpawnPoint_Past[16]
 
 void Init_NewChaoStartPos()
 {
-    for (int i = 0; i < 16; i++) {
+    for (int i = 0; i < LengthOfArray(ChaoSpawnPoint_Past); i++) {
 
         ProbablyChaoSpawnPoints[i] = ChaoSpawnPoint_Past[i];
     }
@@ -46,10 +46,15 @@ void Init_NewStartPos()
     WriteData((float**)0x52b8df, &startPos.z);   
     
     //start pos after leaving race cave
-    WriteData((float**)0x52b882, &startPosLeaveCave.x);
-    WriteData((float**)0x52b88A, &startPosLeaveCave.y);
-    WriteData((float**)0x52b893, &startPosLeaveCave.z);
+    WriteData((float**)0x52b882, &startPosAltar.x);
+    WriteData((float**)0x52b88A, &startPosAltar.y);
+    WriteData((float**)0x52b893, &startPosAltar.z);
 
+
+
+
+    //OBJECT HARDCODED POS:
+    
     //Tansporter new pos
     WriteData((float**)0x54ca00, &transporterPos.x);
     WriteData((float**)0x54ca10, &transporterPos.y);
