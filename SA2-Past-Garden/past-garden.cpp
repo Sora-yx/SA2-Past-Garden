@@ -211,7 +211,7 @@ void __cdecl Past_Garden_Manager(ObjectMaster* a1)
 		{
 			P1->Position = startPos;
 			P1->Rotation.y = rot;
-			data->Position = { 2, -12, 502 };
+			data->Position = { 9, 7, 475 };
 			LoadChildObject(LoadObj_Data1, CameraChildObj, a1);
 		}
 
