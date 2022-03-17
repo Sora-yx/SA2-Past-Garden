@@ -39,7 +39,7 @@ static int __cdecl sub_54AC70_orig(ObjectMaster* obj, float a2, float a3, float 
 
 int sub_54AC70_r(ObjectMaster* obj, float a2, float a3, float a4)
 {
-	if (!IsPlayerInsideSphere(&obj->Data1.Entity->Position, 800))
+	if (CurrentChaoArea == PastGarden && !IsPlayerInsideSphere(&obj->Data1.Entity->Position, 800))
 	{
 		return 0;
 	}
