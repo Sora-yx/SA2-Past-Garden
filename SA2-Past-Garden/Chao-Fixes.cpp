@@ -2,22 +2,25 @@
 
 Trampoline* Chao_Main_t = nullptr;
 Trampoline* sub_54AC70_t = nullptr;
+Trampoline* ALO_Ball_Main2_t = nullptr;
 
 float ColliDistance = 800.0f;
 //a Big garden creates stupid bugs if the player is too far, we hack some functions to prevent them to run if so.
 
-DataPointer(int, ChaoEnabled, 0x01DBE634);
 
 void Chao_Main_r(ObjectMaster* obj)
 {
-	if (CurrentChaoArea == PastGarden && !IsPlayerInsideSphere(&obj->Data1.Entity->Position, 500))
+	if (isInPastGarden())
 	{
-		return;
+		if (MainCharObj1[0])
+		{
+			if (!IsPlayerInsideSphere(&obj->Data1.Entity->Position, 500))
+				return;
+		}
 	}
 
 	((decltype(Chao_Main_r)*)Chao_Main_t->Target())(obj);
 }
-
 
 static int __cdecl sub_54AC70_orig(ObjectMaster* obj, float a2, float a3, float a4)
 {
@@ -39,9 +42,13 @@ static int __cdecl sub_54AC70_orig(ObjectMaster* obj, float a2, float a3, float 
 
 int sub_54AC70_r(ObjectMaster* obj, float a2, float a3, float a4)
 {
-	if (CurrentChaoArea == PastGarden && !IsPlayerInsideSphere(&obj->Data1.Entity->Position, 800))
+	if (isInPastGarden())
 	{
-		return 0;
+		if (MainCharObj1[0])
+		{
+			if (!IsPlayerInsideSphere(&obj->Data1.Entity->Position, 800))
+				return 0;
+		}
 	}
 
 	return sub_54AC70_orig(obj, a2, a3, a4);
@@ -64,10 +71,6 @@ static void __declspec(naked) sub_54AC70ASM()
 	}
 }
 
-bool isInPastGarden()
-{
-	return CurrentLevel == LevelIDs_ChaoWorld && CurrentChaoArea == PastGarden;
-}
 
 float playerPosY = 0.0f;
 
@@ -101,16 +104,26 @@ void CWE_PosYFixes() {
 	CollisionLoop();
 }
 
-DataPointer(float, FLOAT_00905820, 0x905820);
+void ALO_Ball_Main2_r(ObjectMaster* obj)
+{
+	if (isInPastGarden())
+	{
+		if (MainCharObj1[0])
+		{
+			if (!IsPlayerInsideSphere(&obj->Data1.Entity->Position, 500))
+				return;
+		}
+	}
+
+	((decltype(ALO_Ball_Main2_r)*)ALO_Ball_Main2_t->Target())(obj);
+}
 
 void init_ChaoFixes_Hack()
 {
 	sub_54AC70_t = new Trampoline((int)0x54AC70, (int)0x54AC76, sub_54AC70ASM);
 	Chao_Main_t = new Trampoline((int)Chao_Main, (int)Chao_Main + 0x8, Chao_Main_r);
+	ALO_Ball_Main2_t = new Trampoline((int)ALO_Ball_Main2, (int)ALO_Ball_Main2 + 0x6, ALO_Ball_Main2_r); //fix nonsense race entry crash shit
 
 	WriteCall((void*)0x43CF86, CWE_PosYFixes); //fix pos Y issue with Chao World Extended mod
-
-
-	//WriteData((float**)0x47d62B, &ColliDistance);
 	return;
 }

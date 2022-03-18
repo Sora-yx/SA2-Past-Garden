@@ -23,7 +23,6 @@ extern "C" {
 	__declspec(dllexport) void __cdecl OnFrame() {
 
 		CWE_FixesOnFrames();
-		Camera_OnFrames();
 	}
 
 

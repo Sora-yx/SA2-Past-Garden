@@ -43,15 +43,12 @@ void Init_NewStartPos()
     //init new start pos 
     WriteData((float**)0x52b8ce, &startPos.x);
     WriteData((float**)0x52b8d6, &startPos.y);
-    WriteData((float**)0x52b8df, &startPos.z);   
+    WriteData((float**)0x52b8df, &startPos.z);  
     
     //start pos after leaving race cave
     WriteData((float**)0x52b882, &startPosAltar.x);
     WriteData((float**)0x52b88A, &startPosAltar.y);
     WriteData((float**)0x52b893, &startPosAltar.z);
-
-
-
 
     //OBJECT HARDCODED POS:
     

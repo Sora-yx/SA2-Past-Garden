@@ -1,5 +1,11 @@
 #include "pch.h"
 
+
+bool isInPastGarden()
+{
+	return CurrentLevel == LevelIDs_ChaoWorld && CurrentChaoArea == PastGarden;
+}
+
 const char* ModelFormatStrings[]
 {
 	"collision",

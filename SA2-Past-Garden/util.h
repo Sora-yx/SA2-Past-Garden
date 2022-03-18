@@ -12,3 +12,4 @@ void DoNextAction_r(int playerNum, char action, int unknown);
 
 void LookAt(NJS_VECTOR* from, NJS_VECTOR* to, Angle* outx, Angle* outy);
 void PlayerLookAt(NJS_VECTOR* from, NJS_VECTOR* to, Angle* outx, Angle* outy);
+bool isInPastGarden();

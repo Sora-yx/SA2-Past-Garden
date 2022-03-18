@@ -136,6 +136,19 @@ void SpawnAllElements()
 	AL_MinimalCreate();
 	SpawnAllChaoInGarden();
 	Load_ChaoTree();
+	NJS_VECTOR pos = { 141, -0, 349 };
+	NJS_VECTOR vel = { 0, 0, 0 };
+
+	unsigned int save = ChaoSaveIndexThing;
+	if (ChaoSaveIndexThing != 1)
+	{
+		save = 0;
+	}
+
+	if ((ChaoToysUnlocked[12955 * save] & 8) != 0)
+	{
+		ALO_Ball_Load(&pos, &vel);
+	}
 }
 
 void CameraChildObj(ObjectMaster* a1)
@@ -255,10 +268,6 @@ void __cdecl Past_Garden_Manager(ObjectMaster* a1)
 	}
 }
 
-void Camera_OnFrames()
-{
-
-}
 
 void init_PastGarden_Level()
 {
@@ -278,6 +287,7 @@ void init_PastGarden_Level()
 	WriteData<5>((int*)0x54C9B8, 0x90);	//MinimalCreate
 	WriteData<5>((int*)0x54C9C2, 0x90);  //spawn chao create	
 	WriteData<5>((int*)0x54C9C7, 0x90);  //Chao Tree
+	WriteData<5>((int*)0x54CA95, 0x90); //ball toy (col despawn if too far)
 
 	init_ChaoFixes_Hack();
 	init_WaterHack();
