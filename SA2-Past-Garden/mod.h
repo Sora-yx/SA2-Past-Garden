@@ -23,6 +23,7 @@ void PlayPastGardenMusic();
 void __cdecl PastGarden_DelayedDisplay(ObjectMaster* a1);
 void initNewWayPoints();
 void Move_WayPoints_ToNewPose();
+void LandTable_ColRadiusFixes();
 
 enum TimeOfDay : uint8_t
 {

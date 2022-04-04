@@ -116,3 +116,4 @@ static inline void FreeEntityCollision(ObjectMaster* a1)
 
 FunctionPointer(void, njReleaseTexture, (NJS_TEXLIST* a1), 0x77F9F0);
 DataPointer(ObjectMaster*, PointerToNormalCamera, 0x01AED2E8);
+DataPointer(float, landColRadius, 0x171CAA4);

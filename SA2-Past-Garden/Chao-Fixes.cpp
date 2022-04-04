@@ -1,26 +1,10 @@
 #include "pch.h"
 
-Trampoline* Chao_Main_t = nullptr;
 Trampoline* sub_54AC70_t = nullptr;
 Trampoline* ALO_Ball_Main2_t = nullptr;
 
-float ColliDistance = 800.0f;
+
 //a Big garden creates stupid bugs if the player is too far, we hack some functions to prevent them to run if so.
-
-
-void Chao_Main_r(ObjectMaster* obj)
-{
-	if (isInPastGarden())
-	{
-		if (MainCharObj1[0])
-		{
-			if (!IsPlayerInsideSphere(&obj->Data1.Entity->Position, 500))
-				return;
-		}
-	}
-
-	((decltype(Chao_Main_r)*)Chao_Main_t->Target())(obj);
-}
 
 static int __cdecl sub_54AC70_orig(ObjectMaster* obj, float a2, float a3, float a4)
 {
@@ -118,12 +102,22 @@ void ALO_Ball_Main2_r(ObjectMaster* obj)
 	((decltype(ALO_Ball_Main2_r)*)ALO_Ball_Main2_t->Target())(obj);
 }
 
+//sa2 has a limit of 400 radius before it unload a landtable collision to save resource. 
+//this makes objecs and chao clip the floor on big garden, we increase the radius to fix it.
+void LandTable_ColRadiusFixes()
+{
+	if (isInPastGarden())
+		landColRadius = 10000.0f;
+}
+
+
 void init_ChaoFixes_Hack()
 {
 	sub_54AC70_t = new Trampoline((int)0x54AC70, (int)0x54AC76, sub_54AC70ASM);
-	Chao_Main_t = new Trampoline((int)Chao_Main, (int)Chao_Main + 0x8, Chao_Main_r);
 	ALO_Ball_Main2_t = new Trampoline((int)ALO_Ball_Main2, (int)ALO_Ball_Main2 + 0x6, ALO_Ball_Main2_r); //fix nonsense race entry crash shit
 
 	WriteCall((void*)0x43CF86, CWE_PosYFixes); //fix pos Y issue with Chao World Extended mod
+
+
 	return;
 }
