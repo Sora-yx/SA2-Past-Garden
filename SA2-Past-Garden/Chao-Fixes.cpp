@@ -113,7 +113,7 @@ void LandTable_ColRadiusFixes()
 
 void init_ChaoFixes_Hack()
 {
-	sub_54AC70_t = new Trampoline((int)0x54AC70, (int)0x54AC76, sub_54AC70ASM);
+	//sub_54AC70_t = new Trampoline((int)0x54AC70, (int)0x54AC76, sub_54AC70ASM);
 	ALO_Ball_Main2_t = new Trampoline((int)ALO_Ball_Main2, (int)ALO_Ball_Main2 + 0x6, ALO_Ball_Main2_r); //fix nonsense race entry crash shit
 
 	WriteCall((void*)0x43CF86, CWE_PosYFixes); //fix pos Y issue with Chao World Extended mod

@@ -92,6 +92,7 @@ void Load_PastGarden()
 		WaterRippleFunc_ptr = ObjectWaterripple_Load;
 	}
 
+
 	if (!ExecFunc_ptr)
 	{
 		ExecFunc_ptr = Exec_Load;
@@ -134,7 +135,6 @@ void Manage_SoundEffectWater(ObjectMaster* a1, NJS_VECTOR pos, char vol)
 void SpawnAllElements()
 {
 	AL_MinimalCreate();
-	SpawnAllChaoInGarden();
 	Load_ChaoTree();
 	NJS_VECTOR pos = { 141, -0, 349 };
 	NJS_VECTOR vel = { 0, 0, 0 };
@@ -285,7 +285,6 @@ void init_PastGarden_Level()
 
 	//prevent the game to load a ton of chao stuff we will call them after.
 	WriteData<5>((int*)0x54C9B8, 0x90);	//MinimalCreate
-	WriteData<5>((int*)0x54C9C2, 0x90);  //spawn chao create	
 	WriteData<5>((int*)0x54C9C7, 0x90);  //Chao Tree
 	WriteData<5>((int*)0x54CA95, 0x90); //ball toy (col despawn if too far)
 
