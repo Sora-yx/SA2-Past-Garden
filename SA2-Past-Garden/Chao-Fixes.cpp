@@ -89,11 +89,20 @@ DataPointer(int, dword_19459D0, 0x19459D0);
 
 void InitLandColMemory_r()
 {
-	if (CurrentLevel != LevelIDs_ChaoWorld)
+	if (CurrentLevel != LevelIDs_ChaoWorld || CurrentChaoArea > 3)
 	{
+		//restore original landtable col limit
+		WriteData<1>((int*)0x47D67B, 0x80);
+		WriteData<1>((int*)0x47D484, 0x80);
+
 		VoidFunc(origin, InitLandColMemory_t->Target());
 		return origin();
 	}
+
+
+	//increase the number of active col check from 128 to 206 (this goes with the 400 landtable col radius limit)
+	WriteData<1>((int*)0x47D67B, 0xCE);
+	WriteData<1>((int*)0x47D484, 0xCE);
 
 	DWORD* v0; // eax
 	DWORD* v1; // eax
@@ -154,10 +163,6 @@ void init_ChaoFixes_Hack()
 	ALO_Ball_Main2_t = new Trampoline((int)ALO_Ball_Main2, (int)ALO_Ball_Main2 + 0x6, ALO_Ball_Main2_r); //fix nonsense race entry crash shit
 
 	WriteCall((void*)0x43CF86, CWE_PosYFixes); //fix pos Y issue with Chao World Extended mod
-
-	//increase the number of active col check from 128 to 206 (this goes with the 400 landtable col radius limit)
-	WriteData<1>((int*)0x47D67B, 0xCE);
-	WriteData<1>((int*)0x47D484, 0xCE);
 
 	//increase the memory assigned to the landtable collision (fix game crash)
 	InitLandColMemory_t = new Trampoline((int)0x47BB50, (int)0x47BB57, InitLandColMemory_r);
