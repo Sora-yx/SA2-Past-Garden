@@ -20,9 +20,9 @@ static NJS_TEXNAME eveningText[3] = { { (char*)"mrasc_008s_yusorab", 0, 0 }, { (
 static NJS_TEXNAME nightTex[3] = { { (char*)"mrasc_016s_yoruumi", 0, 0 }, { (char*)"mrasc_064s_yorusorab", 0, 0 }, { (char*)"mrasc_256s_yorusoraa", 0, 0 } };
 
 static NJS_TEXLIST timeOfDayTexList[3] = {
-    dayText, 2,
-    eveningText, 2,
-    nightTex, 2,
+    dayText, 3,
+    eveningText, 3,
+    nightTex, 3,
 };
 
 void SetTimeOfDay(uint8_t time)
