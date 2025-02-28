@@ -130,18 +130,16 @@ void DrawWater(ObjectMaster* obj, char id)
     njPopMatrix(1u);
 }
 
-void __cdecl PastGarden_Display(ObjectMaster* a1)
+void PastGarden_Display(ObjectMaster* a1)
 {
 
-    EntityData1* data; // eax
-
-    data = a1->Data1.Entity;
+    EntityData1* data = a1->Data1.Entity;
 
     SaveControl3D();
     OnControl3D(NJD_CONTROL_3D_NO_CLIP_CHECK);
     OffControl3D(NJD_CONTROL_3D_DEPTH_QUEUE);
     njPushMatrix(0);
-    njTranslate(0, CameraData[0].location.pos.x, 0.0, CameraData[0].location.pos.z);
+    njTranslate(0, CameraData[0].location.pos.x, 0.0f, CameraData[0].location.pos.z);
     njScale(0, 2.0, 2.0, 2.0);
     njSetTexture(&timeOfDayTexList[TimeOfDay]);
     njScaleV_(&Skybox_Scale);
@@ -151,7 +149,7 @@ void __cdecl PastGarden_Display(ObjectMaster* a1)
     LoadControl3D();
 }
 
-void __cdecl PastGarden_DelayedDisplay(ObjectMaster* a1)
+void PastGarden_DelayedDisplay(ObjectMaster* a1)
 {
     for (int i = 0; i < LengthOfArray(WaterMdl); i++)
     {

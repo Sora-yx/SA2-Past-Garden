@@ -8,7 +8,7 @@ static LandTableInfo* PastLandInfo = nullptr;
 static NJS_TEXNAME PAST01_TEXNAME[83]{};
 NJS_TEXLIST PAST01_TEXLIST = { arrayptrandlength(PAST01_TEXNAME, Uint32) };
 static const TexPackInfo PAST01_TEXINFO = { "PAST01_DC", &PAST01_TEXLIST };
-
+static bool cameOnce = false;
 float OOBLimit = -150.0f;
 
 FastFunctionHook<void, ObjectMaster*> ChaoGardenNeutral_Delete_h(0x54CC10);
@@ -71,13 +71,13 @@ void Chao_OOBLimit_r()
 	if (CurrentChaoArea > 0 && CurrentChaoArea <= 3)
 	{
 		posY = &MainCharObj1[0]->Position.y;
-		if (MainCharObj1[0]->Position.y > 110.0)
+		if (MainCharObj1[0]->Position.y > 110.0f)
 		{
-			*posY = 110.0;
+			*posY = 110.0f;
 		}
 		if (flt_1657CEC > (double)*posY)
 		{
-			*posY = 0.5;
+			*posY = 0.5f;
 		}
 	}
 }
@@ -117,15 +117,15 @@ void Manage_SoundEffectWater(ObjectMaster* a1, NJS_VECTOR pos, char vol)
 	}
 	timer = data->Timer;
 	data->Timer = timer + 1;
-	if (!(timer % 900) && njRandom() < 0.4000000059604645)
+	if (!(timer % 900) && njRandom() < 0.4000000059604645f)
 	{
-		pos.x = njRandom() - 0.5f * 150.0 + 25.0;
+		pos.x = njRandom() - 0.5f * 150.0f + 25.0f;
 		pos.y = 0.0f;
-		pos.z = njRandom() - 0.5f * 150.0 - 75.0;
+		pos.z = njRandom() - 0.5f * 150.0f - 75.0f;
 
 		if (CurrentChaoArea == NextChaoArea)
 		{
-			v3 = (int)(njRandom() * 300.0 + 120.0);
+			v3 = (int)(njRandom() * 300.0f + 120.0f);
 			Play3DSound_EntityAndPos((EntityData1*)a1, 1, &pos, vol);
 		}
 	}
@@ -220,7 +220,7 @@ void __cdecl Past_Garden_Manager(ObjectMaster* a1)
 		}
 		else
 		{
-			P1->Position = startPos;
+			P1->Position = cameOnce ? newStartPos : startPos;
 			P1->Rotation.y = rot;
 			data->Position = { 9, 7, 475 };
 			LoadChildObject(LoadObj_Data1, CameraChildObj, a1);
@@ -239,6 +239,8 @@ void __cdecl Past_Garden_Manager(ObjectMaster* a1)
 
 		if (IsPlayerInsideSphere(&data->Position, 100))
 		{
+			cameOnce = true;
+			UpdateStartPos();
 			SpawnAllElements();
 			data->Action++;
 		}

@@ -1,6 +1,7 @@
 #include "pch.h"
 
 NJS_VECTOR startPos = { 24.0f, -41.00f, 1475.0f };
+NJS_VECTOR newStartPos = { 3.0f, -51.00f, 706.0f };
 
 NJS_VECTOR startPosAltar = { 0.31f, 90.0, 75.39f };
 
@@ -36,6 +37,13 @@ void Init_NewChaoStartPos()
 
         ProbablyChaoSpawnPoints[i] = ChaoSpawnPoint_Past[i];
     }
+}
+
+void UpdateStartPos()
+{
+    WriteData((float**)0x52b8ce, &newStartPos.x);
+    WriteData((float**)0x52b8d6, &newStartPos.y);
+    WriteData((float**)0x52b8df, &newStartPos.z);
 }
 
 void Init_NewStartPos()
