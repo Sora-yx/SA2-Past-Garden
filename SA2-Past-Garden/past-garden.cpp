@@ -37,10 +37,6 @@ void Delete_PastGarden(ObjectMaster* obj) {
 	njReleaseTexture(&PAST01_TEXLIST);
 	njReleaseTexture((NJS_TEXLIST*)0xB09818);
 
-	if (WaterRippleFunc_ptr)
-	{
-		WaterRippleFunc_ptr = 0;
-	}
 
 	if (ExecFunc_ptr)
 	{
