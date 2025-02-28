@@ -39,6 +39,12 @@
     <ClInclude Include="sa2-util.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="hde32.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="FastFunctionHook.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -82,6 +88,9 @@
     </ClCompile>
     <ClCompile Include="Waypoints.cpp">
       <Filter>Source Files\Garden</Filter>
+    </ClCompile>
+    <ClCompile Include="FastFunctionHook.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

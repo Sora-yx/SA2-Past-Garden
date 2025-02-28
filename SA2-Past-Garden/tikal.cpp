@@ -83,8 +83,8 @@ const char* getTikalDialogue(int index)
 void EV_Chao_Display(ObjectMaster* obj)
 {
 	EntityData1* data = obj->Data1.Entity;
-	njControl3D_Backup();
-	njControl3D_Add(NJD_CONTROL_3D_CONSTANT_MATERIAL);
+	SaveControl3D();
+	OnControl3D(NJD_CONTROL_3D_CONSTANT_MATERIAL);
 	SetMaterial(1.0, 1.0, 1.0, 1.0);
 	njSetTexture(&ChaoEV_texlist);
 	njPushMatrix(0);
@@ -99,7 +99,7 @@ void EV_Chao_Display(ObjectMaster* obj)
 
 	njPopMatrix(1u);
 	ResetMaterial();
-	njControl3D_Restore();
+	LoadControl3D();
 }
 
 void EV_Chao(ObjectMaster* obj)
@@ -189,7 +189,7 @@ void Tikal_Event(ObjectMaster* obj)
 	switch (data->Action)
 	{
 	case init:
-		if (++data->field_6 == timerCameo)
+		if (++data->Timer == timerCameo)
 		{
 			if (TimeOfDay != Night)
 			{
@@ -197,13 +197,13 @@ void Tikal_Event(ObjectMaster* obj)
 				data->Action++;
 			}
 			else {
-				data->field_6 = 0;
+				data->Timer = 0;
 			}
 		}
 		break;
 	case setTikal:
 		InitCollision(obj, &TikalCol, 1, 4u);
-		data->field_6 = 0;
+		data->Timer = 0;
 		data->Index = 0 + rand() % 3;
 		data->Rotation.y = 0x0;
 		data->Position = TikalSpot[data->Index];
@@ -227,20 +227,20 @@ void Tikal_Event(ObjectMaster* obj)
 					return;
 
 				DrawSubtitles(1, text, 105, 1);
-				data->field_6 = 0;
+				data->Timer = 0;
 				data->Action = transition;
 			}
 		}
 
-		if (++data->field_6 == timerWalk)
+		if (++data->Timer == timerWalk)
 		{
 			if (data->Index == gardenPos) {
 				data->Action++;
-				data->field_6 = 0;
+				data->Timer = 0;
 			}
 			else {
 				data->Action = ending;
-				data->field_6 = 0;
+				data->Timer = 0;
 			}
 		}
 
@@ -252,25 +252,25 @@ void Tikal_Event(ObjectMaster* obj)
 			data->Position.x -= 0.3f;
 		}
 		else {
-			data->field_6 = 0;
+			data->Timer = 0;
 			data->Rotation.y += 0x8000;
 			data->Action = ending;
 		}
 
 		break;
 	case transition:
-		if (++data->field_6 == 80)
+		if (++data->Timer == 80)
 		{
 			DoNextAction_r(0, 15, 0);
 			data->Action = standing;
 		}
 		break;
 	case ending:
-		if (++data->field_6 == 60)
+		if (++data->Timer == 60)
 		{
 			FreeEntityCollision(obj);
 			tikalLeaving = true;
-			data->field_6 = 0;
+			data->Timer = 0;
 			data->Action = init;
 		}
 		return;

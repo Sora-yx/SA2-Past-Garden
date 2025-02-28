@@ -31,3 +31,5 @@ enum TimeOfDay : uint8_t
     Evening,
     Night
 };
+
+#define njRandom()       ((Float)((Float)rand()/(Float)(RAND_MAX+1)))

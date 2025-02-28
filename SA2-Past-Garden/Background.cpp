@@ -137,18 +137,18 @@ void __cdecl PastGarden_Display(ObjectMaster* a1)
 
     data = a1->Data1.Entity;
 
-    njControl3D_Backup();
-    njControl3D_Add(NJD_CONTROL_3D_NO_CLIP_CHECK);
-    njControl3D_Remove(NJD_CONTROL_3D_DEPTH_QUEUE);
+    SaveControl3D();
+    OnControl3D(NJD_CONTROL_3D_NO_CLIP_CHECK);
+    OffControl3D(NJD_CONTROL_3D_DEPTH_QUEUE);
     njPushMatrix(0);
-    njTranslate(0, CameraData.Position.x, 0.0, CameraData.Position.z);
+    njTranslate(0, CameraData[0].location.pos.x, 0.0, CameraData[0].location.pos.z);
     njScale(0, 2.0, 2.0, 2.0);
     njSetTexture(&timeOfDayTexList[TimeOfDay]);
     njScaleV_(&Skybox_Scale);
     DrawObject(Past_BG->getmodel());
     njScale(0, 1.0, 1.0, 1.0);
     njPopMatrix(1u);
-    njControl3D_Restore();
+    LoadControl3D();
 }
 
 void __cdecl PastGarden_DelayedDisplay(ObjectMaster* a1)

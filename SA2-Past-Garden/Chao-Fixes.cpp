@@ -1,11 +1,12 @@
 #include "pch.h"
+#include "FastFunctionHook.hpp"
 
-Trampoline* ALO_Ball_Main2_t = nullptr;
-Trampoline* InitLandColMemory_t = nullptr;
+FastFunctionHook<void, ObjectMaster*> ALO_Ball_Main2_h(0x55D310);
+FastFunctionHook<void> InitLandColMemory_h(0x47BB50);
 
 //a Big garden creates stupid bugs if the player is too far, we hack some functions to prevent them to run if so.
 
-float playerPosY = 0.0f;
+Float playerPosY = 0.0f;
 
 void CWE_FixesOnFrames()
 {
@@ -48,7 +49,7 @@ void ALO_Ball_Main2_r(ObjectMaster* obj)
 		}
 	}
 
-	((decltype(ALO_Ball_Main2_r)*)ALO_Ball_Main2_t->Target())(obj);
+	ALO_Ball_Main2_h.Original(obj);
 }
 
 
@@ -58,23 +59,6 @@ void LandTable_ColRadiusFixes()
 {
 	if (isInPastGarden()) {
 		landColRadius = 10000.0f;
-	}
-
-}
-
-void ChangeActiveLandtableColLimit(bool enabled)
-{
-	return;
-
-
-	if (enabled)
-	{
-		//restore vanilla behaviour (128 col max)
-		WriteData<1>((int*)0x47D67B, 0x80);
-		WriteData<1>((int*)0x47D67C, 0x00);
-
-		WriteData<1>((int*)0x47D484, 0x80);
-		WriteData<1>((int*)0x47D485, 0x00);
 	}
 
 }
@@ -95,8 +79,8 @@ void InitLandColMemory_r()
 		WriteData<1>((int*)0x47D67B, 0x80);
 		WriteData<1>((int*)0x47D484, 0x80);
 
-		VoidFunc(origin, InitLandColMemory_t->Target());
-		return origin();
+
+		return InitLandColMemory_h.Original();
 	}
 
 
@@ -160,12 +144,10 @@ void InitLandColMemory_r()
 
 void init_ChaoFixes_Hack()
 {
-	ALO_Ball_Main2_t = new Trampoline((int)ALO_Ball_Main2, (int)ALO_Ball_Main2 + 0x6, ALO_Ball_Main2_r); //fix nonsense race entry crash shit
+	ALO_Ball_Main2_h.Hook(ALO_Ball_Main2_r); //fix nonsense race entry crash shit
 
 	WriteCall((void*)0x43CF86, CWE_PosYFixes); //fix pos Y issue with Chao World Extended mod
 
 	//increase the memory assigned to the landtable collision (fix game crash)
-	InitLandColMemory_t = new Trampoline((int)0x47BB50, (int)0x47BB57, InitLandColMemory_r);
-
-	return;
+	InitLandColMemory_h.Hook(InitLandColMemory_r);
 }

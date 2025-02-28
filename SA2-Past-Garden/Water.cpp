@@ -1,7 +1,8 @@
 #include "pch.h"
+#include "FastFunctionHook.hpp"
 
 float waterHeight = -1000.2f;
-Trampoline* Chao_DetectWater_t = nullptr;
+FastFunctionHook<signed int, ObjectMaster*> Chao_DetectWater_h(0x561630);
 
 //Hack water chao functions to make them working properly in the Past Garden 
 //Credits: Kell (Chao Gameplay)
@@ -29,7 +30,7 @@ signed int __cdecl Chao_DetectWater_r(ObjectMaster* obj) {
 
     if (CurrentLevel == LevelIDs_ChaoWorld && CurrentChaoArea != PastGarden)
     {
-        return ((decltype(Chao_DetectWater_r)*)Chao_DetectWater_t->Target())(obj);
+        return Chao_DetectWater_h.Original(obj);
     }
     else
     {
@@ -79,6 +80,5 @@ void init_WaterHack()
 	//this prevent that pos Y check to work.
 
 	WriteData((float**)0x56168d, &waterHeight);
-    Chao_DetectWater_t = new Trampoline(0x561630, 0x561635, Chao_DetectWater_r);
-    return;
+    Chao_DetectWater_h.Hook(Chao_DetectWater_r);
 }

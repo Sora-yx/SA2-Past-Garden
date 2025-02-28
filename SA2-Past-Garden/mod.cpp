@@ -7,8 +7,6 @@ extern "C" {
 
 	__declspec(dllexport) void __cdecl Init(const char* path, const HelperFunctions& helperFunctions)
 	{
-		Sleep(10);
-
 		HelperFunctionsGlobal = helperFunctions;
 
 		if (HelperFunctionsGlobal.Version < 8) {

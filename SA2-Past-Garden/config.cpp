@@ -10,5 +10,4 @@ void ReadConfig(const char* path) {
 	tikalTheme = config->getBool("Audio", "tikalTheme", true);
 
 	delete config;
-
 }

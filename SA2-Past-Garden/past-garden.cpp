@@ -2,6 +2,7 @@
 #include "Objects.h"
 #include "StartPos.h"
 #include "UsercallFunctionHandler.h"
+#include "FastFunctionHook.hpp"
 
 static LandTableInfo* PastLandInfo = nullptr;
 static NJS_TEXNAME PAST01_TEXNAME[83]{};
@@ -10,7 +11,7 @@ static const TexPackInfo PAST01_TEXINFO = { "PAST01_DC", &PAST01_TEXLIST };
 
 float OOBLimit = -150.0f;
 
-Trampoline* ChaoGardenNeutral_Delete_t = nullptr;
+FastFunctionHook<void, ObjectMaster*> ChaoGardenNeutral_Delete_h(0x54CC10);
 
 void Init_NewTreePos() {
 	TreePos[0] = { 269, -1, 444 };
@@ -20,11 +21,12 @@ void Init_NewTreePos() {
 
 void Delete_PastGarden(ObjectMaster* obj) {
 
-	((decltype(Delete_PastGarden)*)ChaoGardenNeutral_Delete_t->Target())(obj);
+	ChaoGardenNeutral_Delete_h.Original(obj);
 
 	PrintDebug("Delete Past Garden!\n");
 
-	if (PastLandInfo) {
+	if (PastLandInfo) 
+	{
 		delete(PastLandInfo);
 		PastLandInfo = nullptr;
 	}
@@ -45,12 +47,11 @@ void Delete_PastGarden(ObjectMaster* obj) {
 		ExecFunc_ptr = 0;
 	}
 
-	return;
 }
 
 void Chao_OOBLimit_r()
 {
-	Float* posY; // ecx
+	Float* posY;
 
 	if (CurrentChaoArea == PastGarden)
 	{
@@ -59,7 +60,7 @@ void Chao_OOBLimit_r()
 		{
 			*posY = 310.0;
 		}
-		if (OOBLimit > (double)*posY)
+		if (OOBLimit > *posY)
 		{
 			*posY = -30.0f;
 		}
@@ -100,7 +101,6 @@ void Load_PastGarden()
 
 
 	LoadSplashTextures();
-	return;
 }
 
 void Manage_SoundEffectWater(ObjectMaster* a1, NJS_VECTOR pos, char vol)
@@ -115,17 +115,17 @@ void Manage_SoundEffectWater(ObjectMaster* a1, NJS_VECTOR pos, char vol)
 	{
 		Play3DSound_EntityAndPos((EntityData1*)a1, 1, &pos, vol);
 	}
-	timer = data->field_6;
-	data->field_6 = timer + 1;
-	if (!(timer % 900) && (double)rand() * 0.000030517578125 < 0.4000000059604645)
+	timer = data->Timer;
+	data->Timer = timer + 1;
+	if (!(timer % 900) && njRandom() < 0.4000000059604645)
 	{
-		pos.x = ((double)rand() * 0.000030517578125 - 0.5) * 150.0 + 25.0;
-		pos.y = 0.0;
-		pos.z = ((double)rand() * 0.000030517578125 - 0.5) * 150.0 - 75.0;
+		pos.x = njRandom() - 0.5f * 150.0 + 25.0;
+		pos.y = 0.0f;
+		pos.z = njRandom() - 0.5f * 150.0 - 75.0;
 
 		if (CurrentChaoArea == NextChaoArea)
 		{
-			v3 = (int)((double)rand() * 0.000030517578125 * 300.0 + 120.0);
+			v3 = (int)(njRandom() * 300.0 + 120.0);
 			Play3DSound_EntityAndPos((EntityData1*)a1, 1, &pos, vol);
 		}
 	}
@@ -203,7 +203,7 @@ void __cdecl Past_Garden_Manager(ObjectMaster* a1)
 	{
 	case 0:
 
-		if (++data->field_6 == 5) {
+		if (++data->Timer == 5) {
 			Move_WayPoints_ToNewPose();
 			a1->DisplaySub_Delayed1 = PastGarden_DelayedDisplay;
 			data->Action++;
@@ -282,16 +282,20 @@ void init_PastGarden_Level()
 
 	WriteJump((void*)0x54C550, Past_Garden_Manager);
 
+	init_ChaoFixes_Hack();
+
+	//issues is below
+	// 
+	// 
 	//prevent the game to load a ton of chao stuff we will call them after.
 	//WriteData<5>((int*)0x54C9C2, 0x90);  //spawn chao create	
 	WriteData<5>((int*)0x54C9B8, 0x90);	//MinimalCreate
 	WriteData<5>((int*)0x54C9C7, 0x90);  //Chao Tree
 	WriteData<5>((int*)0x54CA95, 0x90); //ball toy (col despawn if too far)
 
-	init_ChaoFixes_Hack();
 	init_WaterHack();
 
-	ChaoGardenNeutral_Delete_t = new Trampoline((int)0x54CC10, (int)0x54CC15, Delete_PastGarden);
+	ChaoGardenNeutral_Delete_h.Hook(Delete_PastGarden);
 
 	initTimeOfDay_Hack();
 	initNewWayPoints();

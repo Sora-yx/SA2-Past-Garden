@@ -42,8 +42,6 @@ void FreeObjectsGarden()
 
 	njReleaseTexture(&PAST01Obj_TEXLIST);
 	njReleaseTexture(&WarpObj_TEXLIST);
-
-	return;
 }
 
 void WarpEffect_Display(ObjectMaster* obj)
@@ -99,11 +97,11 @@ void __cdecl WarpEffect_Main(ObjectMaster* obj)
 		data->Scale.z = scaleZ;
 		if (rotX + 546 >= 0x4000)
 		{
-			data->Position.y = (2.0 - scaleY) * 9.0 + data->field_6;
+			data->Position.y = (2.0 - scaleY) * 9.0 + data->Timer;
 		}
 		else
 		{
-			data->Position.y = scaleY * 9.0 + data->field_6;
+			data->Position.y = scaleY * 9.0 + data->Timer;
 		}
 	}
 	if (data->Rotation.x > 0x8000)
@@ -167,21 +165,21 @@ void EggWarp_Main(ObjectMaster* obj)
 	case 1:
 		if (GetCollidingPlayer(obj))
 		{
-			if (++data->field_6 > 0x32u)
+			if (++data->Timer > 0x32u)
 			{
 				MainCharObj1[pID]->Action = 0;
 				data->Action++;
-				data->field_6 = 0;
+				data->Timer = 0;
 				ControllerEnabled[pID] = 0;
 			}
 		}
 		else {
-			data->field_6 = 0;
+			data->Timer = 0;
 		}
 		break;
 	case 2:
 		ResetPlayerSpeed(0);
-		data->field_6 = 0;
+		data->Timer = 0;
 		data->Action++;
 		break;
 	case 3:
@@ -191,14 +189,14 @@ void EggWarp_Main(ObjectMaster* obj)
 		{
 			EntityData1* warpData = warp->Data1.Entity;
 			warpData->Position = data->Position;
-			warpData->field_6 = data->Position.y + 2.0;
-			timer = warpData->field_6 - 10;
+			warpData->Timer = data->Position.y + 2.0;
+			timer = warpData->Timer - 10;
 		}
 
-		if (++data->field_6 == 80)
+		if (++data->Timer == 80)
 		{
 			data->Action++;
-			data->field_6 = 0;
+			data->Timer = 0;
 		}
 		break;
 	case 4:
